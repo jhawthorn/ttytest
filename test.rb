@@ -34,6 +34,11 @@ class TmuxDriver
     def row(row)
       rows(row, row)
     end
+
+    def cursor_position
+      str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y}])
+      str.split(',').map(&:to_i)
+    end
   end
 
   def new_session(width: 80, height: 24)
@@ -65,3 +70,4 @@ sleep 1
 puts session.capture
 p session.row(0)
 p session.row(1)
+p session.cursor_position
