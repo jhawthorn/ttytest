@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require 'ttytest/session'
+
 module TTYtest
   module Tmux
-    class Session
+    class Session < TTYtest::Session
       attr_reader :driver, :name
 
       def initialize(driver, name)
@@ -26,14 +28,6 @@ module TTYtest
 
       def send_raw(*keys)
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
-      end
-
-      def rows(first, last)
-        capture.split("\n")[first..last]
-      end
-
-      def row(row)
-        rows(row, row)
       end
 
       def cursor_position
