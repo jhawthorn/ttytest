@@ -3,8 +3,7 @@
 $LOAD_PATH.unshift File.expand_path('../lib/', __FILE__)
 require 'ttytest'
 
-driver = TTYtest::Tmux::Driver.new(debug: true)
-session = driver.new_session
+session = TTYtest.driver.new_session
 sleep 1
 session.send_raw('echo "Hello, world"')
 session.send_keys("Enter")
