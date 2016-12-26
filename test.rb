@@ -7,8 +7,8 @@ class TmuxDriver
   TMUX_CMD = 'tmux'
   SOCKET_NAME = 'ttytest'
 
-  def initialize
-    @debug = true
+  def initialize(debug: false)
+    @debug = debug
   end
 
   class TmuxError < StandardError
@@ -18,11 +18,20 @@ class TmuxDriver
     def capture
       driver.tmux(*%W[capture-pane -t #{name} -p])
     end
+
+    def send_keys(*keys)
+      driver.tmux(*%W[send-keys -t #{name}], *keys)
+    end
+
+    def send_raw(*keys)
+      driver.tmux(*%W[send-keys -t #{name} -l], *keys)
+    end
   end
 
   def new_session(width: 80, height: 24)
     session_name = "ttytest-#{SecureRandom.uuid}"
-    tmux(*%W[new-session -s #{session_name} -d -x #{width} -y #{height}])
+    cmd = %(PS1='$ ' /bin/sh)
+    tmux(*%W[new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
     Session.new(self, session_name)
   end
 
@@ -39,7 +48,10 @@ class TmuxDriver
   end
 end
 
-driver = TmuxDriver.new
+driver = TmuxDriver.new(debug: true)
 session = driver.new_session
+sleep 1
+session.send_raw('echo "Hello, world"')
+session.send_keys("Enter")
 sleep 1
 puts session.capture
