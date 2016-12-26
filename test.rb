@@ -4,11 +4,13 @@ require 'open3'
 require 'securerandom'
 
 class TmuxDriver
-  TMUX_CMD = 'tmux'
+  COMMAND = 'tmux'
   SOCKET_NAME = 'ttytest'
 
-  def initialize(debug: false)
+  def initialize(debug: false, command: COMMAND, socket_name: SOCKET_NAME)
     @debug = debug
+    @tmux_cmd = command
+    @socket_name = socket_name
   end
 
   class TmuxError < StandardError
