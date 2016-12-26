@@ -1,82 +1,9 @@
 # frozen_string_literal: true
 
-require 'open3'
-require 'securerandom'
+$LOAD_PATH.unshift File.expand_path('../lib/', __FILE__)
+require 'ttytest'
 
-class TmuxDriver
-  COMMAND = 'tmux'
-  SOCKET_NAME = 'ttytest'
-
-  def initialize(debug: false, command: COMMAND, socket_name: SOCKET_NAME)
-    @debug = debug
-    @tmux_cmd = command
-    @socket_name = socket_name
-  end
-
-  class TmuxError < StandardError
-  end
-
-  class Session
-    attr_reader :driver, :name
-
-    def initialize(driver, name)
-      @driver = driver
-      @name = name
-
-      ObjectSpace.define_finalizer(self, self.class.finalize(driver, name))
-    end
-
-    def self.finalize(driver, name)
-      proc { driver.tmux(*%W[kill-session -t #{name}]) }
-    end
-
-    def capture
-      driver.tmux(*%W[capture-pane -t #{name} -p])
-    end
-
-    def send_keys(*keys)
-      driver.tmux(*%W[send-keys -t #{name}], *keys)
-    end
-
-    def send_raw(*keys)
-      driver.tmux(*%W[send-keys -t #{name} -l], *keys)
-    end
-
-    def rows(first, last)
-      capture.split("\n")[first..last]
-    end
-
-    def row(row)
-      rows(row, row)
-    end
-
-    def cursor_position
-      str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y}])
-      str.split(',').map(&:to_i)
-    end
-  end
-
-  def new_session(width: 80, height: 24)
-    session_name = "ttytest-#{SecureRandom.uuid}"
-    cmd = %(PS1='$ ' /bin/sh)
-    tmux(*%W[new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
-    Session.new(self, session_name)
-  end
-
-  def tmux(*args)
-    puts "tmux(#{args.inspect[1...-1]})" if debug?
-
-    stdout, stderr, status = Open3.capture3(TMUX_CMD, '-L', SOCKET_NAME, *args)
-    raise TmuxError, "tmux(#{args.join}) failed\n#{stderr}" unless status.success?
-    stdout
-  end
-
-  def debug?
-    @debug
-  end
-end
-
-driver = TmuxDriver.new(debug: true)
+driver = TTYtest::Tmux::Driver.new(debug: true)
 session = driver.new_session
 sleep 1
 session.send_raw('echo "Hello, world"')
