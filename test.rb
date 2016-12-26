@@ -1,0 +1,45 @@
+# frozen_string_literal: true
+
+require 'open3'
+require 'securerandom'
+
+class TmuxDriver
+  TMUX_CMD = 'tmux'
+  SOCKET_NAME = 'ttytest'
+
+  def initialize
+    @debug = true
+  end
+
+  class TmuxError < StandardError
+  end
+
+  class Session < Struct.new(:driver, :name)
+    def capture
+      driver.tmux(*%W[capture-pane -t #{name} -p])
+    end
+  end
+
+  def new_session(width: 80, height: 24)
+    session_name = "ttytest-#{SecureRandom.uuid}"
+    tmux(*%W[new-session -s #{session_name} -d -x #{width} -y #{height}])
+    Session.new(self, session_name)
+  end
+
+  def tmux(*args)
+    puts "tmux(#{args.inspect[1...-1]})" if debug?
+
+    stdout, stderr, status = Open3.capture3(TMUX_CMD, '-L', SOCKET_NAME, *args)
+    raise TmuxError, "tmux(#{args.join}) failed\n#{stderr}" unless status.success?
+    stdout
+  end
+
+  def debug?
+    @debug
+  end
+end
+
+driver = TmuxDriver.new
+session = driver.new_session
+sleep 1
+puts session.capture
