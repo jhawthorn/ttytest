@@ -26,6 +26,14 @@ class TmuxDriver
     def send_raw(*keys)
       driver.tmux(*%W[send-keys -t #{name} -l], *keys)
     end
+
+    def rows(first, last)
+      capture.split("\n")[first..last]
+    end
+
+    def row(row)
+      rows(row, row)
+    end
   end
 
   def new_session(width: 80, height: 24)
@@ -55,3 +63,5 @@ session.send_raw('echo "Hello, world"')
 session.send_keys("Enter")
 sleep 1
 puts session.capture
+p session.row(0)
+p session.row(1)
