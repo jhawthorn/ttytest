@@ -15,9 +15,10 @@ module TTYtest
     end
 
     def test_assert_row_failure
-      assert_raises TTYtest::MatchError do
+      ex = assert_raises TTYtest::MatchError do
         @terminal.assert_row(0, "foo")
       end
+      assert_includes ex.message, 'expected row 0 to be "foo" but got nil'
     end
 
     def test_assert_cursor_position_success
@@ -28,14 +29,16 @@ module TTYtest
     end
 
     def test_assert_cursor_position_failure
-      assert_raises TTYtest::MatchError do
+      ex = assert_raises TTYtest::MatchError do
         @terminal.assert_cursor_position(1, 1)
       end
+      assert_includes ex.message, 'expected cursor to be at [1, 1] but was at [0, 0]'
 
       @dummy.cursor_position = [1,2]
-      assert_raises TTYtest::MatchError do
+      ex = assert_raises TTYtest::MatchError do
         @terminal.assert_cursor_position(0, 0)
       end
+      assert_includes ex.message, 'expected cursor to be at [0, 0] but was at [1, 2]'
     end
   end
 end
