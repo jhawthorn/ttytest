@@ -4,7 +4,7 @@ module TTYtest
       synchronize do
         actual = row(row_number)
         if actual != expected
-          raise MatchError, "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{capture}"
+          raise MatchError, "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{to_s}"
         end
       end
     end
@@ -14,7 +14,7 @@ module TTYtest
         expected = [x, y]
         actual = cursor_position
         if actual != expected
-          raise MatchError, "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{capture}"
+          raise MatchError, "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{to_s}"
         end
       end
     end

@@ -1,5 +1,6 @@
 require 'forwardable'
 require 'ttytest/matchers'
+require 'ttytest/capture'
 
 module TTYtest
   class Terminal
@@ -11,16 +12,11 @@ module TTYtest
       @synchronize = synchronize
     end
 
-    def_delegators :@driver_terminal, :capture, :send_keys, :send_raw, :cursor_position
+    def_delegators :@driver_terminal, :send_keys, :send_raw, :cursor_position
+    def_delegators :capture, :rows, :row
 
-    def rows
-      (capture+"\nEND").split("\n")[0...-1].map do |row|
-        row || ""
-      end
-    end
-
-    def row(row)
-      rows[row]
+    def capture
+      Capture.new(@driver_terminal.capture)
     end
 
     def synchronize?
