@@ -8,17 +8,18 @@ module TTYtest
     end
 
     def test_assert_row_success
-      @dummy.contents = "foo\nbar\nbaz"
+      @dummy.contents = "foo\nbar\nbaz" + "\n"*21
       @terminal.assert_row(0, "foo")
       @terminal.assert_row(1, "bar")
       @terminal.assert_row(2, "baz")
+      @terminal.assert_row(3, "")
     end
 
     def test_assert_row_failure
       ex = assert_raises TTYtest::MatchError do
         @terminal.assert_row(0, "foo")
       end
-      assert_includes ex.message, 'expected row 0 to be "foo" but got nil'
+      assert_includes ex.message, 'expected row 0 to be "foo" but got ""'
     end
 
     def test_assert_cursor_position_success

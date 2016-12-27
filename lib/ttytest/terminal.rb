@@ -13,12 +13,14 @@ module TTYtest
 
     def_delegators :@driver_terminal, :capture, :send_keys, :send_raw, :cursor_position
 
-    def rows(first, last)
-      capture.split("\n")[first..last]
+    def rows
+      (capture+"\nEND").split("\n")[0...-1].map do |row|
+        row || ""
+      end
     end
 
     def row(row)
-      capture.split("\n")[row]
+      rows[row]
     end
 
     def synchronize?
