@@ -4,7 +4,7 @@ module TTYtest
 
     def initialize
       @contents = "\n"*23
-      @cursor_position = []
+      @cursor_position = [0,0]
     end
 
     def capture

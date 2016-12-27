@@ -9,6 +9,16 @@ module TTYtest
       end
     end
 
+    def assert_cursor_position(x, y)
+      synchronize do
+        expected = [x, y]
+        actual = cursor_position
+        if actual != expected
+          raise MatchError, "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{capture}"
+        end
+      end
+    end
+
     def synchronize(seconds=TTYtest.default_max_wait_time)
       start_time = Time.now
       begin
