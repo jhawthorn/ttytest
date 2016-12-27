@@ -4,7 +4,6 @@ require 'ttytest/capture'
 
 module TTYtest
   class Terminal
-    include TTYtest::Matchers
     extend Forwardable
 
     def initialize(driver_terminal, synchronize: true)
@@ -16,11 +15,31 @@ module TTYtest
     def_delegators :capture, :rows, :row
 
     def capture
-      Capture.new(@driver_terminal.capture)
+      Capture.new(@driver_terminal.capture, @driver_terminal.cursor_position)
     end
 
     def synchronize?
       @synchronize
+    end
+
+    def synchronize(seconds=TTYtest.default_max_wait_time)
+      start_time = Time.now
+      begin
+        yield
+      rescue MatchError => e
+        raise e unless synchronize?
+        raise e if (Time.now - start_time) >= seconds
+        sleep 0.05
+        retry
+      end
+    end
+
+    TTYtest::Matchers::METHODS.each do |matcher_name|
+      define_method matcher_name do |*args|
+        synchronize do
+          capture.public_send(matcher_name, *args)
+        end
+      end
     end
   end
 end

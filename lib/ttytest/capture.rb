@@ -2,10 +2,13 @@ module TTYtest
   class Capture
     include TTYtest::Matchers
 
-    def initialize(contents)
+    attr_reader :cursor_position
+
+    def initialize(contents, cursor_position)
       @rows = (contents+"\nEND").split("\n")[0...-1].map do |row|
         row || ""
       end
+      @cursor_position = cursor_position
     end
 
     def rows
@@ -22,10 +25,6 @@ module TTYtest
 
     def to_s
       rows.join("\n")
-    end
-
-    def synchronize?
-      false
     end
   end
 end
