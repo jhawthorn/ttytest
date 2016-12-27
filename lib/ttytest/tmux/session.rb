@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require 'ttytest/session'
-
 module TTYtest
   module Tmux
-    class Session < TTYtest::Session
+    class Session
       attr_reader :driver, :name
 
       def initialize(driver, name)

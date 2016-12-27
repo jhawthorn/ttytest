@@ -3,6 +3,7 @@
 require 'open3'
 require 'securerandom'
 
+require 'ttytest/terminal'
 require 'ttytest/tmux/session'
 
 module TTYtest
@@ -19,11 +20,11 @@ module TTYtest
         @socket_name = socket_name
       end
 
-      def new_session(width: 80, height: 24)
+      def new_terminal(cmd, width: 80, height: 24)
         session_name = "ttytest-#{SecureRandom.uuid}"
-        cmd = %(PS1='$ ' /bin/sh)
         tmux(*%W[new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
-        Session.new(self, session_name)
+        session = Session.new(self, session_name)
+        Terminal.new(session)
       end
 
       def tmux(*args)

@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift File.expand_path('../lib/', __FILE__)
 require 'ttytest'
 
-session = TTYtest.driver.new_session
+session = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh})
 session.assert_row(0, '$')
 session.send_raw('echo "Hello, world"')
 session.send_keys("Enter")
