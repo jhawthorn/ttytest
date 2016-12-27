@@ -14,6 +14,7 @@ module TTYtest
       begin
         yield
       rescue MatchError => e
+        raise e unless synchronize?
         raise e if (Time.now - start_time) >= seconds
         sleep 0.05
         retry

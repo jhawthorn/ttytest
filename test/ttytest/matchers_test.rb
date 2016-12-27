@@ -4,7 +4,7 @@ module TTYtest
   class MatchersTest < Minitest::Test
     def setup
       @dummy = TTYtest::Dummy.new
-      @terminal = TTYtest::Terminal.new(@dummy)
+      @terminal = TTYtest::Terminal.new(@dummy, synchronize: false)
     end
 
     def test_assert_row_success
