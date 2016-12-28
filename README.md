@@ -1,4 +1,6 @@
-TTYtest is an integration test framework for interactive tty applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+TTYtest is an integration test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+
+It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
 [![Build Status](https://travis-ci.org/jhawthorn/ttytest.svg?branch=master)](https://travis-ci.org/jhawthorn/ttytest)
 
