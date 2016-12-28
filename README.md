@@ -40,7 +40,7 @@ addons:
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/jhawthorn/execjs-fastnode.
+Bug reports and pull requests are welcome on GitHub at https://github.com/jhawthorn/ttytest.
 
 ## License
 
