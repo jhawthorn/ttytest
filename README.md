@@ -14,12 +14,13 @@ class TTYtestTest < Minitest::Test
   def test_shell_hello_world
     @tty = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh})
     @tty.assert_row(0, '$')
+    @tty.assert_cursor_position(x: 2, y: 0)
 
-    @tty.send_raw('echo "Hello, world"', "\n")
+    @tty.send_keys(%{echo "Hello, world"\n})
 
     @tty.assert_row(0, '$ echo "Hello, world"')
     @tty.assert_row(1, 'Hello, world')
-    @tty.assert_cursor_position(2, 2)
+    @tty.assert_cursor_position(x: 2, y: 2)
   end
 end
 ```
