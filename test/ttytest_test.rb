@@ -12,4 +12,12 @@ class TTYtestTest < Minitest::Test
     @tty.assert_row(2, '$')
     @tty.assert_cursor_position(2, 2)
   end
+
+  def test_command_exiting
+    @tty = TTYtest.driver.new_terminal(%{echo "foo\nbar"})
+    @tty.assert_row(0, 'foo')
+    @tty.assert_row(1, 'bar')
+    @tty.assert_row(2, '')
+    @tty.assert_cursor_position(0, 2)
+  end
 end
