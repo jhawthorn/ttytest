@@ -2,42 +2,41 @@ require 'test_helper'
 
 module TTYtest
   class MatchersTest < Minitest::Test
-    def setup
-      @dummy = TTYtest::Dummy.new
-      @terminal = TTYtest::Terminal.new(@dummy, synchronize: false)
-    end
-
+    EMPTY = "\n"*23
     def test_assert_row_success
-      @dummy.contents = "foo\nbar\nbaz" + "\n"*21
-      @terminal.assert_row(0, "foo")
-      @terminal.assert_row(1, "bar")
-      @terminal.assert_row(2, "baz")
-      @terminal.assert_row(3, "")
+      @capture = Capture.new("foo\nbar\nbaz" + "\n"*21)
+      @capture.assert_row(0, "foo")
+      @capture.assert_row(1, "bar")
+      @capture.assert_row(2, "baz")
+      @capture.assert_row(3, "")
     end
 
     def test_assert_row_failure
+      @capture = Capture.new(EMPTY)
       ex = assert_raises TTYtest::MatchError do
-        @terminal.assert_row(0, "foo")
+        @capture.assert_row(0, "foo")
       end
       assert_includes ex.message, 'expected row 0 to be "foo" but got ""'
     end
 
     def test_assert_cursor_position_success
-      @terminal.assert_cursor_position(0, 0)
+      @capture = Capture.new(EMPTY)
+      @capture.assert_cursor_position(0, 0)
 
-      @dummy.cursor_position = [1,2]
-      @terminal.assert_cursor_position(1, 2)
+      @capture = Capture.new(EMPTY, cursor_x: 1, cursor_y: 2)
+      @capture.assert_cursor_position(1, 2)
     end
 
     def test_assert_cursor_position_failure
+      @capture = Capture.new(EMPTY)
       ex = assert_raises TTYtest::MatchError do
-        @terminal.assert_cursor_position(1, 1)
+        @capture.assert_cursor_position(1, 1)
       end
       assert_includes ex.message, 'expected cursor to be at [1, 1] but was at [0, 0]'
 
-      @dummy.cursor_position = [1,2]
+      @capture = Capture.new(EMPTY, cursor_x: 1, cursor_y: 2)
       ex = assert_raises TTYtest::MatchError do
-        @terminal.assert_cursor_position(0, 0)
+        @capture.assert_cursor_position(0, 0)
       end
       assert_includes ex.message, 'expected cursor to be at [0, 0] but was at [1, 2]'
     end
