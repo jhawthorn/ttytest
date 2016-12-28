@@ -11,12 +11,8 @@ module TTYtest
       @synchronize = synchronize
     end
 
-    def_delegators :@driver_terminal, :send_keys, :send_raw, :cursor_position
-    def_delegators :capture, :rows, :row
-
-    def capture
-      Capture.new(@driver_terminal.capture, @driver_terminal.cursor_position)
-    end
+    def_delegators :@driver_terminal, :send_keys, :send_raw, :capture
+    def_delegators :capture, :rows, :row, :cursor_position
 
     def synchronize?
       @synchronize

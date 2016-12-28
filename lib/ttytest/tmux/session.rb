@@ -17,7 +17,11 @@ module TTYtest
       end
 
       def capture
-        driver.tmux(*%W[capture-pane -t #{name} -p])
+        contents = driver.tmux(*%W[capture-pane -t #{name} -p])
+        str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y},#\{cursor_flag}])
+        x, y, cursor_flag = str.split(',').map(&:to_i)
+        cursor_visible = (cursor_flag != 0)
+        TTYtest::Capture.new(contents, cursor_x: x, cursor_y: y, cursor_visible: cursor_visible)
       end
 
       def send_keys(*keys)
@@ -26,11 +30,6 @@ module TTYtest
 
       def send_raw(*keys)
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
-      end
-
-      def cursor_position
-        str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y}])
-        str.split(',').map(&:to_i)
       end
     end
   end
