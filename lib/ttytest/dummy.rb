@@ -11,9 +11,5 @@ module TTYtest
       x, y = cursor_position
       Capture.new(contents, cursor_x: x, cursor_y: y)
     end
-
-    def synchronize?
-      false
-    end
   end
 end
