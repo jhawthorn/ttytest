@@ -12,6 +12,7 @@ module TTYtest
       COMMAND = 'tmux'
       SOCKET_NAME = 'ttytest'
       REQUIRED_TMUX_VERSION = '1.8'
+      CONF_PATH = File.expand_path('../tmux.conf', __FILE__)
 
       class TmuxError < StandardError; end
 
@@ -23,7 +24,7 @@ module TTYtest
 
       def new_terminal(cmd, width: 80, height: 24)
         session_name = "ttytest-#{SecureRandom.uuid}"
-        tmux(*%W[new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
+        tmux(*%W[-f #{CONF_PATH} new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
         session = Session.new(self, session_name)
         Terminal.new(session)
       end
