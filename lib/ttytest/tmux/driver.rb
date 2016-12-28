@@ -11,6 +11,7 @@ module TTYtest
     class Driver
       COMMAND = 'tmux'
       SOCKET_NAME = 'ttytest'
+      REQUIRED_TMUX_VERSION = '1.8'
 
       class TmuxError < StandardError; end
 
@@ -37,7 +38,7 @@ module TTYtest
       end
 
       def available?
-        @available ||= (Gem::Version.new(tmux_version) >= Gem::Version.new("1.8"))
+        @available ||= (Gem::Version.new(tmux_version) >= Gem::Version.new(REQUIRED_TMUX_VERSION))
       end
 
       def debug?
@@ -51,7 +52,7 @@ module TTYtest
           if !tmux_version
             raise TmuxError, "tmux doesn't seem to be unstalled" unless available?
           else
-            raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= 1.8" unless available?
+            raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= #{REQUIRED_TMUX_VERSION}" unless available?
           end
         end
       end
