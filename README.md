@@ -1,5 +1,7 @@
 TTYtest is an integration test framework for interactive tty applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
 
+[![Build Status](https://travis-ci.org/jhawthorn/ttytest.svg?branch=master)](https://travis-ci.org/jhawthorn/ttytest)
+
 ## Requirements
 
 * tmux >= 1.8
