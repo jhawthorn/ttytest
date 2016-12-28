@@ -2,7 +2,7 @@ TTYtest is an integration test framework for interactive tty applications. It's 
 
 ## Requirements
 
-* tmux
+* tmux >= 1.8
 * Ruby >= 2.1
 
 ## Contributing

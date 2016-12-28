@@ -28,6 +28,7 @@ module TTYtest
       end
 
       def tmux(*args)
+        ensure_available
         puts "tmux(#{args.inspect[1...-1]})" if debug?
 
         stdout, stderr, status = Open3.capture3(COMMAND, '-L', SOCKET_NAME, *args)
@@ -35,8 +36,30 @@ module TTYtest
         stdout
       end
 
+      def available?
+        @available ||= (Gem::Version.new(tmux_version) >= Gem::Version.new("1.8"))
+      end
+
       def debug?
         @debug
+      end
+
+      private
+
+      def ensure_available
+        if !available?
+          if !tmux_version
+            raise TmuxError, "tmux doesn't seem to be unstalled" unless available?
+          else
+            raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= 1.8" unless available?
+          end
+        end
+      end
+
+      def tmux_version
+        @tmux_version ||= `tmux -V`[/tmux (\d+.\d+)/, 1]
+      rescue Errno::ENOENT
+        nil
       end
     end
   end
