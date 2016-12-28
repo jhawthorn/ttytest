@@ -2,7 +2,7 @@ require "test_helper"
 
 class TTYtestTest < Minitest::Test
   def test_shell_hello_world
-    @tty = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh})
+    @tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh})
     @tty.assert_row(0, '$')
     @tty.send_raw('echo "Hello, world"')
     @tty.assert_row(0, '$ echo "Hello, world"')
@@ -14,7 +14,7 @@ class TTYtestTest < Minitest::Test
   end
 
   def test_command_exiting
-    @tty = TTYtest.driver.new_terminal(%{echo "foo\nbar"})
+    @tty = TTYtest.new_terminal(%{echo "foo\nbar"})
     @tty.assert_row(0, 'foo')
     @tty.assert_row(1, 'bar')
     @tty.assert_row(2, '')

@@ -12,7 +12,7 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 ## Usage
 
 ``` ruby
-@tty = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
+@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
 @tty.assert_row(0, '$')
 @tty.assert_cursor_position(x: 2, y: 0)
 

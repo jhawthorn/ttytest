@@ -1,3 +1,4 @@
+require 'forwardable'
 require 'ttytest/tmux/driver'
 require 'ttytest/tmux/session'
 
@@ -5,6 +6,9 @@ module TTYtest
   class << self
     attr_accessor :driver
     attr_accessor :default_max_wait_time
+
+    extend Forwardable
+    def_delegators :driver, :new_terminal
   end
 
   class MatchError < StandardError; end
