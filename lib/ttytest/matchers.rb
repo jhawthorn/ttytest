@@ -7,7 +7,7 @@ module TTYtest
       end
     end
 
-    def assert_cursor_position(x, y)
+    def assert_cursor_position(x:, y:)
       expected = [x, y]
       actual = cursor_position
       if actual != expected
