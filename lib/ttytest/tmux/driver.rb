@@ -32,7 +32,7 @@ module TTYtest
         ensure_available
         puts "tmux(#{args.inspect[1...-1]})" if debug?
 
-        stdout, stderr, status = Open3.capture3(COMMAND, '-L', SOCKET_NAME, *args)
+        stdout, stderr, status = Open3.capture3(@tmux_cmd, '-L', SOCKET_NAME, *args)
         raise TmuxError, "tmux(#{args.inspect[1...-1]}) failed\n#{stderr}" unless status.success?
         stdout
       end
@@ -58,7 +58,7 @@ module TTYtest
       end
 
       def tmux_version
-        @tmux_version ||= `tmux -V`[/tmux (\d+.\d+)/, 1]
+        @tmux_version ||= `#{@tmux_cmd} -V`[/tmux (\d+.\d+)/, 1]
       rescue Errno::ENOENT
         nil
       end
