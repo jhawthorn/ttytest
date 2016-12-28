@@ -4,9 +4,9 @@ class TTYtestTest < Minitest::Test
   def test_shell_hello_world
     @tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh})
     @tty.assert_row(0, '$')
-    @tty.send_raw('echo "Hello, world"')
+    @tty.send_keys('echo "Hello, world"')
     @tty.assert_row(0, '$ echo "Hello, world"')
-    @tty.send_keys("Enter")
+    @tty.send_keys("\n")
     @tty.assert_row(1, 'Hello, world')
 
     @tty.assert_row(2, '$')

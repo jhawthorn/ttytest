@@ -25,10 +25,6 @@ module TTYtest
       end
 
       def send_keys(*keys)
-        driver.tmux(*%W[send-keys -t #{name}], *keys)
-      end
-
-      def send_raw(*keys)
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
       end
     end
