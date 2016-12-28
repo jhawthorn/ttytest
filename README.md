@@ -5,6 +5,23 @@ TTYtest is an integration test framework for interactive tty applications. It's 
 * tmux >= 1.8
 * Ruby >= 2.1
 
+## Usage
+
+``` ruby
+class TTYtestTest < Minitest::Test
+  def test_shell_hello_world
+    @tty = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh})
+    @tty.assert_row(0, '$')
+
+    @tty.send_raw('echo "Hello, world"', "\n")
+
+    @tty.assert_row(0, '$ echo "Hello, world"')
+    @tty.assert_row(1, 'Hello, world')
+    @tty.assert_curor_position(2, 2)
+  end
+end
+```
+
 ## TravisCI
 
 TTYtest can run on [TravisCI](https://travis-ci.org/), but the version of tmux made available with their default ubuntu 12.04 environment is too old. However the TravisCI ubuntu 14.04 "trusty" image provides tmux 1.8, which works great.
