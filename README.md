@@ -10,20 +10,20 @@ TTYtest is an integration test framework for interactive tty applications. It's 
 ## Usage
 
 ``` ruby
-class TTYtestTest < Minitest::Test
-  def test_shell_hello_world
-    @tty = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh})
-    @tty.assert_row(0, '$')
-    @tty.assert_cursor_position(x: 2, y: 0)
+@tty = TTYtest.driver.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
+@tty.assert_row(0, '$')
+@tty.assert_cursor_position(x: 2, y: 0)
 
-    @tty.send_keys(%{echo "Hello, world"\n})
+@tty.send_keys(%{echo "Hello, world"\n})
 
-    @tty.assert_row(0, '$ echo "Hello, world"')
-    @tty.assert_row(1, 'Hello, world')
-    @tty.assert_cursor_position(x: 2, y: 2)
-  end
-end
+@tty.assert_row(0, '$ echo "Hello, world"')
+@tty.assert_row(1, 'Hello, world')
+@tty.assert_cursor_position(x: 2, y: 2)
+
+p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
 ```
+
+See also [fzy's integration test](https://github.com/jhawthorn/fzy/blob/master/test/integration/integration_test.rb) for a full example.
 
 ## TravisCI
 
