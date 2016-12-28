@@ -10,6 +10,6 @@ class TTYtestTest < Minitest::Test
     @tty.assert_row(1, 'Hello, world')
 
     @tty.assert_row(2, '$')
-    @tty.assert_curor_position(2, 2)
+    @tty.assert_cursor_position(2, 2)
   end
 end
