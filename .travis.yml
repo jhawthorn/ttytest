@@ -1,0 +1,12 @@
+dist: trusty
+language: ruby
+cache: bundler
+sudo: false
+before_script:
+  - tmux -V
+rvm:
+  - 2.3.3
+addons:
+  apt:
+    packages:
+    - tmux
