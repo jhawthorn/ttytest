@@ -2,7 +2,7 @@ module TTYtest
   class Capture
     include TTYtest::Matchers
 
-    attr_reader :cursor_x, :cursor_y, :cursor_visible
+    attr_reader :cursor_x, :cursor_y
     attr_reader :width, :height
 
     def initialize(contents, cursor_x: 0, cursor_y: 0, width: nil, height: nil, cursor_visible: true)
@@ -26,6 +26,14 @@ module TTYtest
 
     def row(row)
       rows[row]
+    end
+
+    def cursor_visible?
+      @cursor_visible
+    end
+
+    def cursor_hidden?
+      !cursor_visible?
     end
 
     def capture

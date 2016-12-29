@@ -52,4 +52,17 @@ class TTYtestTest < Minitest::Test
     assert_equal 10, @tty.height
     assert_equal 10, @tty.rows.length
   end
+
+  def test_cursor_visibility
+    @tty = TTYtest.new_terminal('echo -e "\e[?25lhide"')
+    @tty.assert_row 0, "hide"
+    assert @tty.cursor_hidden?
+    assert !@tty.cursor_visible?
+
+    @tty = TTYtest.new_terminal('echo -e "\e[?25lhide\n\e[?25hshow"')
+    @tty.assert_row 0, "hide"
+    @tty.assert_row 1, "show"
+    assert @tty.cursor_visible?
+    assert !@tty.cursor_hidden?
+  end
 end
