@@ -18,10 +18,16 @@ module TTYtest
 
       def capture
         contents = driver.tmux(*%W[capture-pane -t #{name} -p])
-        str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y},#\{cursor_flag}])
-        x, y, cursor_flag = str.split(',').map(&:to_i)
-        cursor_visible = (cursor_flag != 0)
-        TTYtest::Capture.new(contents, cursor_x: x, cursor_y: y, cursor_visible: cursor_visible)
+        str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y},#\{cursor_flag},#\{pane_width},#\{pane_height}])
+        x, y, cursor_flag, width, height = str.split(',')
+        TTYtest::Capture.new(
+          contents.chomp("\n"),
+          cursor_x: x.to_i,
+          cursor_y: y.to_i,
+          width: width.to_i,
+          height: height.to_i,
+          cursor_visible: (cursor_flag != '0')
+        )
       end
 
       def send_keys(*keys)

@@ -20,4 +20,36 @@ class TTYtestTest < Minitest::Test
     @tty.assert_row(2, '')
     @tty.assert_cursor_position(y: 2, x: 0)
   end
+
+  def test_terminal_dimenstions
+    @tty = TTYtest.new_terminal('')
+    assert_equal 80, @tty.width
+    assert_equal 24, @tty.height
+    assert_equal 24, @tty.rows.length
+
+    @tty = TTYtest.new_terminal('', width: 80, height: 24)
+    assert_equal 80, @tty.width
+    assert_equal 24, @tty.height
+    assert_equal 24, @tty.rows.length
+
+    @tty = TTYtest.new_terminal('', width: 80, height: 10)
+    assert_equal 80, @tty.width
+    assert_equal 10, @tty.height
+    assert_equal 10, @tty.rows.length
+
+    @tty = TTYtest.new_terminal('', width: 10, height: 24)
+    assert_equal 10, @tty.width
+    assert_equal 24, @tty.height
+    assert_equal 24, @tty.rows.length
+
+    @tty = TTYtest.new_terminal('', width: 10, height: 10)
+    assert_equal 10, @tty.width
+    assert_equal 10, @tty.height
+    assert_equal 10, @tty.rows.length
+
+    @tty = TTYtest.new_terminal('', width: 10, height: 10)
+    assert_equal 10, @tty.width
+    assert_equal 10, @tty.height
+    assert_equal 10, @tty.rows.length
+  end
 end
