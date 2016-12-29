@@ -18,6 +18,16 @@ module TTYtest
     def_delegators :@driver_terminal, :send_keys, :send_raw, :capture
     def_delegators :capture, :rows, :row, :cursor_position, :width, :height, :cursor_visible?, :cursor_hidden?
 
+    TTYtest::Matchers::METHODS.each do |matcher_name|
+      define_method matcher_name do |*args|
+        synchronize do
+          capture.public_send(matcher_name, *args)
+        end
+      end
+    end
+
+    private
+
     def synchronize(seconds=max_wait_time)
       start_time = Time.now
       begin
@@ -26,14 +36,6 @@ module TTYtest
         raise e if (Time.now - start_time) >= seconds
         sleep 0.05
         retry
-      end
-    end
-
-    TTYtest::Matchers::METHODS.each do |matcher_name|
-      define_method matcher_name do |*args|
-        synchronize do
-          capture.public_send(matcher_name, *args)
-        end
       end
     end
   end
