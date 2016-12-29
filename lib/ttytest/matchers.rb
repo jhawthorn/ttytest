@@ -15,6 +15,18 @@ module TTYtest
       end
     end
 
+    def assert_cursor_visible
+      if !cursor_visible?
+        raise MatchError, "expected cursor to be visible was hidden\nEntire screen:\n#{to_s}"
+      end
+    end
+
+    def assert_cursor_hidden
+      if !cursor_hidden?
+        raise MatchError, "expected cursor to be hidden was visible\nEntire screen:\n#{to_s}"
+      end
+    end
+
     METHODS = public_instance_methods
   end
 end
