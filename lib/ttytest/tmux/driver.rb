@@ -24,7 +24,7 @@ module TTYtest
       end
 
       def new_terminal(cmd, width: 80, height: 24)
-        cmd = "#{cmd};#{SLEEP_INFINITY}"
+        cmd = "#{cmd}\n#{SLEEP_INFINITY}"
 
         session_name = "ttytest-#{SecureRandom.uuid}"
         tmux(*%W[-f #{CONF_PATH} new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
