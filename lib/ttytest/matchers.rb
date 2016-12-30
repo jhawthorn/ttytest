@@ -9,7 +9,7 @@ module TTYtest
 
     def assert_cursor_position(x:, y:)
       expected = [x, y]
-      actual = cursor_position
+      actual = [cursor_x, cursor_y]
       if actual != expected
         raise MatchError, "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{to_s}"
       end

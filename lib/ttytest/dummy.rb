@@ -1,15 +1,13 @@
 module TTYtest
   class Dummy
-    attr_accessor :contents, :cursor_position
+    attr_accessor :contents
 
     def initialize
       @contents = "\n"*23
-      @cursor_position = [0,0]
     end
 
     def capture
-      x, y = cursor_position
-      Capture.new(contents, cursor_x: x, cursor_y: y)
+      Capture.new(contents)
     end
   end
 end

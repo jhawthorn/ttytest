@@ -16,10 +16,6 @@ module TTYtest
       @cursor_visible = cursor_visible
     end
 
-    def cursor_position
-      [@cursor_x, @cursor_y]
-    end
-
     def rows
       @rows
     end

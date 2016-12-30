@@ -16,7 +16,7 @@ module TTYtest
     end
 
     def_delegators :@driver_terminal, :send_keys, :send_raw, :capture
-    def_delegators :capture, :rows, :row, :cursor_position, :width, :height, :cursor_visible?, :cursor_hidden?
+    def_delegators :capture, :rows, :row, :width, :height, :cursor_visible?, :cursor_hidden?
 
     TTYtest::Matchers::METHODS.each do |matcher_name|
       define_method matcher_name do |*args|
