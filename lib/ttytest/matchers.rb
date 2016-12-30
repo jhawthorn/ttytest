@@ -27,6 +27,26 @@ module TTYtest
       end
     end
 
+    def assert_matches(expected)
+      expected_rows = expected.split("\n")
+      diff = []
+      matched = true
+      rows.each_with_index do |actual_row, index|
+        expected_row = (expected_rows[index] || "").rstrip
+        if actual_row != expected_row
+          diff << "-#{expected_row}"
+          diff << "+#{actual_row}"
+          matched = false
+        else
+          diff << " #{actual_row}".rstrip
+        end
+      end
+
+      if !matched
+        raise MatchError, "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
+      end
+    end
+
     METHODS = public_instance_methods
   end
 end

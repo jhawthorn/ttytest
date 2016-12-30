@@ -40,5 +40,42 @@ module TTYtest
       end
       assert_includes ex.message, 'expected cursor to be at [0, 0] but was at [1, 2]'
     end
+
+    def test_assert_matches_success
+      @capture = Capture.new(EMPTY)
+      @capture.assert_matches("")
+      @capture.assert_matches("\n")
+      @capture.assert_matches <<TERM
+TERM
+
+      @capture = Capture.new <<TERM
+$ echo "Hello, world
+Hello, world
+
+
+TERM
+      @capture.assert_matches <<TERM
+$ echo "Hello, world
+Hello, world
+TERM
+    end
+
+    def test_assert_matches_failure
+      @capture = Capture.new("\n\n\n")
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_matches <<TERM
+$ echo "Hello, world"
+TERM
+      end
+      assert_equal ex.message, <<TERM
+screen did not match expected content:
+--- expected
++++ actual
+-$ echo "Hello, world"
++
+
+
+TERM
+    end
   end
 end
