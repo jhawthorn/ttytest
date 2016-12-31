@@ -1,4 +1,4 @@
-TTYtest is an integration test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+TTYtest is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
@@ -10,6 +10,8 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 * Ruby >= 2.1
 
 ## Usage
+
+### Example
 
 ``` ruby
 @tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
@@ -29,6 +31,17 @@ p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ..
 ```
 
 See also [fzy's integration test](https://github.com/jhawthorn/fzy/blob/master/test/integration/integration_test.rb) for a full example.
+
+### Assertions
+
+The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds by default).
+
+Available assertions:
+* `assert_row(row_number, expected_text)`
+* `assert_cursor_position(x: x, y: y)`
+* `assert_cursor_visible`
+* `assert_cursor_hidden`
+* `assert_matches(lines_of_terminal)`
 
 ## TravisCI
 
