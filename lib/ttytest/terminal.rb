@@ -15,7 +15,7 @@ module TTYtest
       @max_wait_time || TTYtest.default_max_wait_time
     end
 
-    def_delegators :@driver_terminal, :send_keys, :send_raw, :capture
+    def_delegators :@driver_terminal, :send_keys, :capture
     def_delegators :capture, :rows, :row, :width, :height, :cursor_visible?, :cursor_hidden?
 
     TTYtest::Matchers::METHODS.each do |matcher_name|
