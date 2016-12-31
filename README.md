@@ -18,8 +18,11 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 
 @tty.send_keys(%{echo "Hello, world"\n})
 
-@tty.assert_row(0, '$ echo "Hello, world"')
-@tty.assert_row(1, 'Hello, world')
+@tty.assert_matches <<TTY
+$ echo "Hello, world"
+Hello, world
+$
+TTY
 @tty.assert_cursor_position(x: 2, y: 2)
 
 p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
