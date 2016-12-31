@@ -6,13 +6,11 @@ module TTYtest
   class Terminal
     extend Forwardable
 
+    attr_accessor :max_wait_time
+
     def initialize(driver_terminal, max_wait_time: nil)
       @driver_terminal = driver_terminal
-      @max_wait_time = max_wait_time
-    end
-
-    def max_wait_time
-      @max_wait_time || TTYtest.default_max_wait_time
+      @max_wait_time = max_wait_time || TTYtest.default_max_wait_time
     end
 
     def_delegators :@driver_terminal, :send_keys, :capture
