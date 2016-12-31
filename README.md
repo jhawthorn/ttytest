@@ -3,6 +3,7 @@ TTYtest is an acceptance test framework for interactive console applications. It
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
 [![Build Status](https://travis-ci.org/jhawthorn/ttytest.svg?branch=master)](https://travis-ci.org/jhawthorn/ttytest)
+[![Gem Version](https://badge.fury.io/rb/ttytest.svg)](https://rubygems.org/gems/ttytest)
 
 ## Requirements
 
