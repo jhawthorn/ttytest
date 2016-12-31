@@ -1,5 +1,9 @@
 module TTYtest
   module Matchers
+    # Asserts the contents of a single row
+    # @param [Integer] row_number the row to test against
+    # @param [String] expected the expected value of the row
+    # @raise [MatchError] if the row doesn't match
     def assert_row(row_number, expected)
       actual = row(row_number)
       if actual != expected
@@ -7,6 +11,10 @@ module TTYtest
       end
     end
 
+    # Asserts that the cursor is in the expected position
+    # @param [Integer] x cursor x (row) position
+    # @param [Integer] y cursor y (column) position
+    # @raise [MatchError] if the cursor position doesn't match
     def assert_cursor_position(x:, y:)
       expected = [x, y]
       actual = [cursor_x, cursor_y]
@@ -15,18 +23,23 @@ module TTYtest
       end
     end
 
+    # @raise [MatchError] if the cursor is hidden
     def assert_cursor_visible
       if !cursor_visible?
         raise MatchError, "expected cursor to be visible was hidden\nEntire screen:\n#{to_s}"
       end
     end
 
+    # @raise [MatchError] if the cursor is visible
     def assert_cursor_hidden
       if !cursor_hidden?
         raise MatchError, "expected cursor to be hidden was visible\nEntire screen:\n#{to_s}"
       end
     end
 
+    # Asserts the full contents of the terminal
+    # @param [String] expected the full expected contents of the terminal.
+    # @raise [MatchError] if the terminal doesn't match the expected content
     def assert_matches(expected)
       expected_rows = expected.split("\n")
       diff = []

@@ -32,6 +32,7 @@ module TTYtest
         Terminal.new(session)
       end
 
+      # @api private
       def tmux(*args)
         ensure_available
         puts "tmux(#{args.inspect[1...-1]})" if debug?

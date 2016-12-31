@@ -3,8 +3,7 @@
 module TTYtest
   module Tmux
     class Session
-      attr_reader :driver, :name
-
+      # @api private
       def initialize(driver, name)
         @driver = driver
         @name = name
@@ -12,6 +11,7 @@ module TTYtest
         ObjectSpace.define_finalizer(self, self.class.finalize(driver, name))
       end
 
+      # @api private
       def self.finalize(driver, name)
         proc { driver.tmux(*%W[kill-session -t #{name}]) }
       end
@@ -33,6 +33,10 @@ module TTYtest
       def send_keys(*keys)
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
       end
+
+      private
+
+      attr_reader :driver, :name
     end
   end
 end
