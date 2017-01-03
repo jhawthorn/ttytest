@@ -12,22 +12,28 @@ module TTYtest
       COMMAND = 'tmux'
       SOCKET_NAME = 'ttytest'
       REQUIRED_TMUX_VERSION = '1.8'
-      CONF_PATH = File.expand_path('../tmux.conf', __FILE__)
+      DEFAULT_CONFING_FILE_PATH = File.expand_path('../tmux.conf', __FILE__)
       SLEEP_INFINITY = 'read x < /dev/fd/1'
 
       class TmuxError < StandardError; end
 
-      def initialize(debug: false, command: COMMAND, socket_name: SOCKET_NAME)
+      def initialize(
+        debug: false,
+        command: COMMAND,
+        socket_name: SOCKET_NAME,
+        config_file_path: DEFAULT_CONFING_FILE_PATH
+      )
         @debug = debug
         @tmux_cmd = command
         @socket_name = socket_name
+        @config_file_path = config_file_path
       end
 
       def new_terminal(cmd, width: 80, height: 24)
         cmd = "#{cmd}\n#{SLEEP_INFINITY}"
 
         session_name = "ttytest-#{SecureRandom.uuid}"
-        tmux(*%W[-f #{CONF_PATH} new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
+        tmux(*%W[-f #{@config_file_path} new-session -s #{session_name} -d -x #{width} -y #{height} #{cmd}])
         session = Session.new(self, session_name)
         Terminal.new(session)
       end
