@@ -2,8 +2,8 @@ module TTYtest
   # Represents the complete state of a {TTYtest::Terminal} at the time it was captured (contents, cursor position, etc).
   # @attr_reader [Integer] width the number of columns in the captured terminal
   # @attr_reader [Integer] height the number of rows in the captured terminal
-  # @attr_reader [Integer] cursor_x the cursor's columns in the captured terminal
-  # @attr_reader [Integer] cursor_y the cursor's row in the captured terminal
+  # @attr_reader [Integer] cursor_x the cursor's column (starting at 0) in the captured terminal
+  # @attr_reader [Integer] cursor_y the cursor's row (starting at 0) in the captured terminal
   class Capture
     include TTYtest::Matchers
 
