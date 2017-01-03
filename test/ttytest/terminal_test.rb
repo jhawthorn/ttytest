@@ -83,6 +83,27 @@ module TTYtest
       @tty.assert_cursor_position(y: 6, x: 12)
       assert 6, @tty.cursor_y
       assert 12, @tty.cursor_x
+
+      @tty = TTYtest.new_terminal('echo -en "\e[5A"')
+      @tty.assert_cursor_position(y: 0, x: 0)
+
+      @tty = TTYtest.new_terminal('echo -en "\e[5B"')
+      @tty.assert_cursor_position(y: 5, x: 0)
+
+      @tty = TTYtest.new_terminal('echo -en "\e[5C"')
+      @tty.assert_cursor_position(y: 0, x: 5)
+
+      @tty = TTYtest.new_terminal('echo -en "\e[5D"')
+      @tty.assert_cursor_position(y: 0, x: 0)
+    end
+
+    def test_clear_screen
+      @tty = TTYtest.new_terminal('echo -en "foo\nbar\nbaz\n"; read; echo -en "\e[2J"')
+      @tty.assert_matches("foo\nbar\nbaz")
+
+      @tty.send_keys("\n")
+
+      @tty.assert_matches("")
     end
   end
 end
