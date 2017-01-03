@@ -46,11 +46,11 @@ module TTYtest
         @available ||= (Gem::Version.new(tmux_version) >= Gem::Version.new(REQUIRED_TMUX_VERSION))
       end
 
+      private
+
       def debug?
         @debug
       end
-
-      private
 
       def ensure_available
         if !available?
