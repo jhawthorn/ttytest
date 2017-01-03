@@ -22,6 +22,20 @@ module TTYtest
       @tty.assert_cursor_position(y: 2, x: 0)
     end
 
+    def test_empty_commands
+      @tty = TTYtest.new_terminal('')
+      @tty.assert_cursor_position(x:0, y: 0)
+      @tty.assert_matches ''
+
+      @tty = TTYtest.new_terminal(' ')
+      @tty.assert_cursor_position(x:0, y: 0)
+      @tty.assert_matches ''
+
+      @tty = TTYtest.new_terminal("\n")
+      @tty.assert_cursor_position(x:0, y: 0)
+      @tty.assert_matches ''
+    end
+
     def test_terminal_dimenstions
       @tty = TTYtest.new_terminal('')
       assert_equal 80, @tty.width
