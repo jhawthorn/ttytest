@@ -72,5 +72,17 @@ module TTYtest
       assert @tty.cursor_visible?
       assert !@tty.cursor_hidden?
     end
+
+    def test_cursor_position
+      @tty = TTYtest.new_terminal('')
+      @tty.assert_cursor_position(y: 0, x: 0)
+      assert 0, @tty.cursor_y
+      assert 0, @tty.cursor_x
+
+      @tty = TTYtest.new_terminal('echo -en "\e[7;13H"')
+      @tty.assert_cursor_position(y: 6, x: 12)
+      assert 6, @tty.cursor_y
+      assert 12, @tty.cursor_x
+    end
   end
 end

@@ -36,13 +36,19 @@ module TTYtest
     # @!method height
     #   @see Capture#height
     #   @return [Integer]
+    # @!method cursor_x
+    #   @see Capture#cursor_x
+    #   @return [Integer]
+    # @!method cursor_y
+    #   @see Capture#cursor_y
+    #   @return [Integer]
     # @!method cursor_visible?
     #   @see Capture#cursor_visible?
     #   @return [true,false]
     # @!method cursor_hidden?
     #   @see Capture#cursor_hidden?
     #   @return [true,false]
-    def_delegators :capture, :rows, :row, :width, :height, :cursor_visible?, :cursor_hidden?
+    def_delegators :capture, :rows, :row, :width, :height, :cursor_x, :cursor_y, :cursor_visible?, :cursor_hidden?
 
     TTYtest::Matchers::METHODS.each do |matcher_name|
       define_method matcher_name do |*args|
