@@ -5,7 +5,7 @@ module TTYtest
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row(row_number, expected)
-      expected = expected.gsub(/ +\z/, '')
+      expected = expected.rstrip
       actual = row(row_number)
       if actual != expected
         raise MatchError, "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{to_s}"
