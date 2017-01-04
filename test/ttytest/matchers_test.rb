@@ -60,11 +60,11 @@ module TTYtest
       assert_includes ex.message, 'expected cursor to be at [0, 0] but was at [1, 2]'
     end
 
-    def test_assert_matches_success
+    def test_assert_contents_success
       @capture = Capture.new(EMPTY)
-      @capture.assert_matches("")
-      @capture.assert_matches("\n")
-      @capture.assert_matches <<TERM
+      @capture.assert_contents("")
+      @capture.assert_contents("\n")
+      @capture.assert_contents <<TERM
 TERM
 
       @capture = Capture.new <<TERM
@@ -73,16 +73,16 @@ Hello, world
 
 
 TERM
-      @capture.assert_matches <<TERM
+      @capture.assert_contents <<TERM
 $ echo "Hello, world
 Hello, world
 TERM
     end
 
-    def test_assert_matches_failure
+    def test_assert_contents_failure
       @capture = Capture.new("\n\n\n")
       ex = assert_raises TTYtest::MatchError do
-        @capture.assert_matches <<TERM
+        @capture.assert_contents <<TERM
 $ echo "Hello, world"
 TERM
       end

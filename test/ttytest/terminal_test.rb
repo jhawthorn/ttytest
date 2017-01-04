@@ -25,15 +25,15 @@ module TTYtest
     def test_empty_commands
       @tty = TTYtest.new_terminal('')
       @tty.assert_cursor_position(x:0, y: 0)
-      @tty.assert_matches ''
+      @tty.assert_contents ''
 
       @tty = TTYtest.new_terminal(' ')
       @tty.assert_cursor_position(x:0, y: 0)
-      @tty.assert_matches ''
+      @tty.assert_contents ''
 
       @tty = TTYtest.new_terminal("\n")
       @tty.assert_cursor_position(x:0, y: 0)
-      @tty.assert_matches ''
+      @tty.assert_contents ''
     end
 
     def test_terminal_dimenstions
@@ -113,11 +113,11 @@ module TTYtest
 
     def test_clear_screen
       @tty = TTYtest.new_terminal('echo -en "foo\nbar\nbaz\n"; read; echo -en "\e[2J"')
-      @tty.assert_matches("foo\nbar\nbaz")
+      @tty.assert_contents("foo\nbar\nbaz")
 
       @tty.send_keys("\n")
 
-      @tty.assert_matches("")
+      @tty.assert_contents("")
     end
   end
 end

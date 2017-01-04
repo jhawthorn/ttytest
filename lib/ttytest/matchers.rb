@@ -41,7 +41,7 @@ module TTYtest
     # Asserts the full contents of the terminal
     # @param [String] expected the full expected contents of the terminal.
     # @raise [MatchError] if the terminal doesn't match the expected content
-    def assert_matches(expected)
+    def assert_contents(expected)
       expected_rows = expected.split("\n")
       diff = []
       matched = true
@@ -60,6 +60,7 @@ module TTYtest
         raise MatchError, "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
       end
     end
+    alias_method :assert_matches, :assert_contents
 
     METHODS = public_instance_methods
   end

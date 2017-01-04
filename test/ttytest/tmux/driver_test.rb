@@ -54,7 +54,7 @@ RUBY
       ex = assert_raises TTYtest::Tmux::Driver::TmuxError do
         # We use an assertion that will never match in order to perform
         # captures until the command errors
-        @tty.assert_matches 'this is never found'
+        @tty.assert_contents 'this is never found'
       end
       assert_includes ex.message, "Tmux pane has died\nCommand exited with status:"
     end

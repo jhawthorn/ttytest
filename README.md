@@ -21,7 +21,7 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 
 @tty.send_keys(%{echo "Hello, world"\n})
 
-@tty.assert_matches <<TTY
+@tty.assert_contents <<TTY
 $ echo "Hello, world"
 Hello, world
 $
@@ -42,7 +42,7 @@ Available assertions:
 * `assert_cursor_position(x: x, y: y)`
 * `assert_cursor_visible`
 * `assert_cursor_hidden`
-* `assert_matches(lines_of_terminal)`
+* `assert_contents(lines_of_terminal)`
 
 ## TravisCI
 
