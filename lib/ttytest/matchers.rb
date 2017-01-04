@@ -1,10 +1,11 @@
 module TTYtest
   module Matchers
     # Asserts the contents of a single row
-    # @param [Integer] row_number the row to test against
-    # @param [String] expected the expected value of the row
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row(row_number, expected)
+      expected = expected.gsub(/ +\z/, '')
       actual = row(row_number)
       if actual != expected
         raise MatchError, "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{to_s}"
@@ -12,8 +13,8 @@ module TTYtest
     end
 
     # Asserts that the cursor is in the expected position
-    # @param [Integer] x cursor x (row) position
-    # @param [Integer] y cursor y (column) position
+    # @param [Integer] x cursor x (row) position, starting from 0
+    # @param [Integer] y cursor y (column) position, starting from 0
     # @raise [MatchError] if the cursor position doesn't match
     def assert_cursor_position(x:, y:)
       expected = [x, y]

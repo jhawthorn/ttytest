@@ -3,6 +3,7 @@ require 'test_helper'
 module TTYtest
   class MatchersTest < Minitest::Test
     EMPTY = "\n"*23
+
     def test_assert_row_success
       @capture = Capture.new("foo\nbar\nbaz" + "\n"*21)
       @capture.assert_row(0, "foo")
@@ -17,6 +18,24 @@ module TTYtest
         @capture.assert_row(0, "foo")
       end
       assert_includes ex.message, 'expected row 0 to be "foo" but got ""'
+    end
+
+    def test_assert_row_trailing_whitespace
+      @capture = Capture.new("")
+      @capture.assert_row(0, " ")
+      @capture.assert_row(0, "   ")
+
+      @capture = Capture.new("foo")
+      @capture.assert_row(0, "foo ")
+      @capture.assert_row(0, "foo  ")
+      @capture.assert_row(0, "foo   ")
+
+      @capture = Capture.new(" foo")
+      @capture.assert_row(0, " foo")
+      @capture.assert_row(0, " foo ")
+      assert_raises TTYtest::MatchError do
+        @capture.assert_row(0, "foo")
+      end
     end
 
     def test_assert_cursor_position_success
