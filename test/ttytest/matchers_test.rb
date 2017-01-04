@@ -96,5 +96,22 @@ screen did not match expected content:
 
 TERM
     end
+
+    def test_assert_contents_trailing_whitespace
+      @capture = Capture.new(EMPTY)
+      @capture.assert_contents(" ")
+      @capture.assert_contents("  ")
+      @capture.assert_contents("  \n \n")
+
+      @capture = Capture.new("foo")
+      @capture.assert_contents("foo")
+      @capture.assert_contents("foo  ")
+      @capture.assert_contents("foo  \n \n")
+
+      @capture = Capture.new("\nfoo\n")
+      @capture.assert_contents("\nfoo")
+      @capture.assert_contents("\nfoo  ")
+      @capture.assert_contents("  \nfoo \n ")
+    end
   end
 end

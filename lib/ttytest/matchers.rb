@@ -39,7 +39,7 @@ module TTYtest
     end
 
     # Asserts the full contents of the terminal
-    # @param [String] expected the full expected contents of the terminal.
+    # @param [String] expected the full expected contents of the terminal. Trailing whitespace on each line is ignored
     # @raise [MatchError] if the terminal doesn't match the expected content
     def assert_contents(expected)
       expected_rows = expected.split("\n")
