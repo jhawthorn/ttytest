@@ -61,9 +61,9 @@ module TTYtest
       def ensure_available
         if !available?
           if !tmux_version
-            raise TmuxError, "tmux doesn't seem to be unstalled" unless available?
+            raise TmuxError, "Running `tmux -V` to determine version failed. Is tmux installed?"
           else
-            raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= #{REQUIRED_TMUX_VERSION}" unless available?
+            raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= #{REQUIRED_TMUX_VERSION}"
           end
         end
       end
