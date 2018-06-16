@@ -49,6 +49,7 @@ module TTYtest
       end
 
       def available?
+        return false unless tmux_version
         @available ||= (Gem::Version.new(tmux_version) >= Gem::Version.new(REQUIRED_TMUX_VERSION))
       end
 

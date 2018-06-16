@@ -22,14 +22,14 @@ module TTYtest
       with_fake_tmux_command('1.7') do |cmd|
         @driver = TTYtest::Tmux::Driver.new(command: cmd)
         assert !@driver.available?
-        assert_raises TTYtest::Tmux::Driver::TmuxError, "tmux version 1.7 does not meet requirement >= 1.8" do
+        assert_raises TTYtest::Tmux::Driver::TmuxError do
           @driver.new_terminal('')
         end
       end
 
       @driver = TTYtest::Tmux::Driver.new(command: "tmux_command_not_found")
       assert !@driver.available?
-      assert_raises TTYtest::Tmux::Driver::TmuxError, "tmux version 1.7 does not meet requirement >= 1.8" do
+      assert_raises TTYtest::Tmux::Driver::TmuxError do
         @driver.new_terminal('')
       end
     end
