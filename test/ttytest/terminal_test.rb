@@ -15,7 +15,7 @@ module TTYtest
     end
 
     def test_command_exiting
-      @tty = TTYtest.new_terminal(%{echo "foo\nbar"})
+      @tty = TTYtest.new_terminal(%{printf "foo\nbar\n"})
       @tty.assert_row(0, 'foo')
       @tty.assert_row(1, 'bar')
       @tty.assert_row(2, '')
@@ -69,7 +69,7 @@ module TTYtest
     end
 
     def test_cursor_visibility
-      @tty = TTYtest.new_terminal('read; echo -e "\e[?25l"; read; echo -e "\e[?25h"')
+      @tty = TTYtest.new_terminal('read; printf "\e[?25l"; read; printf "\e[?25h"')
       @tty.assert_cursor_visible
       assert @tty.cursor_visible?
       assert !@tty.cursor_hidden?
@@ -93,26 +93,26 @@ module TTYtest
       assert 0, @tty.cursor_y
       assert 0, @tty.cursor_x
 
-      @tty = TTYtest.new_terminal('echo -en "\e[7;13H"')
+      @tty = TTYtest.new_terminal('printf "\e[7;13H"')
       @tty.assert_cursor_position(y: 6, x: 12)
       assert 6, @tty.cursor_y
       assert 12, @tty.cursor_x
 
-      @tty = TTYtest.new_terminal('echo -en "\e[5A"')
+      @tty = TTYtest.new_terminal('printf "\e[5A"')
       @tty.assert_cursor_position(y: 0, x: 0)
 
-      @tty = TTYtest.new_terminal('echo -en "\e[5B"')
+      @tty = TTYtest.new_terminal('printf "\e[5B"')
       @tty.assert_cursor_position(y: 5, x: 0)
 
-      @tty = TTYtest.new_terminal('echo -en "\e[5C"')
+      @tty = TTYtest.new_terminal('printf "\e[5C"')
       @tty.assert_cursor_position(y: 0, x: 5)
 
-      @tty = TTYtest.new_terminal('echo -en "\e[5D"')
+      @tty = TTYtest.new_terminal('printf "\e[5D"')
       @tty.assert_cursor_position(y: 0, x: 0)
     end
 
     def test_clear_screen
-      @tty = TTYtest.new_terminal('echo -en "foo\nbar\nbaz\n"; read; echo -en "\e[2J"')
+      @tty = TTYtest.new_terminal('printf "foo\nbar\nbaz\n"; read; printf "\e[2J"')
       @tty.assert_contents("foo\nbar\nbaz")
 
       @tty.send_keys("\n")
