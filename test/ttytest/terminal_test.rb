@@ -69,7 +69,7 @@ module TTYtest
     end
 
     def test_cursor_visibility
-      @tty = TTYtest.new_terminal('read; printf "\e[?25l"; read; printf "\e[?25h"')
+      @tty = TTYtest.new_terminal('read TMP; printf "\e[?25l"; read TMP; printf "\e[?25h"')
       @tty.assert_cursor_visible
       assert @tty.cursor_visible?
       assert !@tty.cursor_hidden?
@@ -112,7 +112,7 @@ module TTYtest
     end
 
     def test_clear_screen
-      @tty = TTYtest.new_terminal('printf "foo\nbar\nbaz\n"; read; printf "\e[2J"')
+      @tty = TTYtest.new_terminal('printf "foo\nbar\nbaz\n"; read TMP; printf "\e[2J"')
       @tty.assert_contents("foo\nbar\nbaz")
 
       @tty.send_keys("\n")
