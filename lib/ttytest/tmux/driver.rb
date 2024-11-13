@@ -8,6 +8,7 @@ require 'ttytest/tmux/session'
 
 module TTYtest
   module Tmux
+    # tmux driver
     class Driver
       COMMAND = 'tmux'
       SOCKET_NAME = 'ttytest'

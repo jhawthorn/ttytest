@@ -19,12 +19,15 @@ module TTYtest
     end
 
     # @!method send_keys(*keys)
-    #   Simulate typing keys into the terminal
+    #   Simulate typing keys into the terminal. For canonical cli's/shells which read line by line.
+    #   @param [String] keys keys to send to the terminal
+    # @!method send_keys_one_at_a_time(*keys)
+    #   Simulate typing keys into the terminal. For noncanonical cli's/shells which read character by character.
     #   @param [String] keys keys to send to the terminal
     # @!method capture
     #   Capture the current state of the terminal
     #   @return [Capture] instantaneous state of the terminal when called
-    def_delegators :@driver_terminal, :send_keys, :capture
+    def_delegators :@driver_terminal, :send_keys, :send_keys_one_at_a_time, :capture
 
     # @!method rows
     #   @return [Array<String>]
