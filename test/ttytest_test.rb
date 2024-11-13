@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class TTYtestTest < Minitest::Test
   def test_default_driver

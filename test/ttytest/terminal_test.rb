@@ -3,7 +3,7 @@ require 'test_helper'
 module TTYtest
   class TerminalTest < Minitest::Test
     def test_shell_hello_world
-      @tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh})
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh))
       @tty.assert_row(0, '$')
       @tty.send_keys('echo "Hello, world"')
       @tty.assert_row(0, '$ echo "Hello, world"')
@@ -11,28 +11,28 @@ module TTYtest
       @tty.assert_row(1, 'Hello, world')
 
       @tty.assert_row(2, '$')
-      @tty.assert_cursor_position(y: 2, x: 2)
+      @tty.assert_cursor_position(2, 2)
     end
 
     def test_command_exiting
-      @tty = TTYtest.new_terminal(%{printf "foo\nbar\n"})
+      @tty = TTYtest.new_terminal(%(printf "foo\nbar\n"))
       @tty.assert_row(0, 'foo')
       @tty.assert_row(1, 'bar')
       @tty.assert_row(2, '')
-      @tty.assert_cursor_position(y: 2, x: 0)
+      @tty.assert_cursor_position(0, 2)
     end
 
     def test_empty_commands
       @tty = TTYtest.new_terminal('')
-      @tty.assert_cursor_position(x:0, y: 0)
+      @tty.assert_cursor_position(0, 0)
       @tty.assert_contents ''
 
       @tty = TTYtest.new_terminal(' ')
-      @tty.assert_cursor_position(x:0, y: 0)
+      @tty.assert_cursor_position(0, 0)
       @tty.assert_contents ''
 
       @tty = TTYtest.new_terminal("\n")
-      @tty.assert_cursor_position(x:0, y: 0)
+      @tty.assert_cursor_position(0, 0)
       @tty.assert_contents ''
     end
 
@@ -89,26 +89,26 @@ module TTYtest
 
     def test_cursor_position
       @tty = TTYtest.new_terminal('')
-      @tty.assert_cursor_position(y: 0, x: 0)
+      @tty.assert_cursor_position(0, 0)
       assert 0, @tty.cursor_y
       assert 0, @tty.cursor_x
 
       @tty = TTYtest.new_terminal('printf "\033[7;13H"')
-      @tty.assert_cursor_position(y: 6, x: 12)
+      @tty.assert_cursor_position(12, 6)
       assert 6, @tty.cursor_y
       assert 12, @tty.cursor_x
 
       @tty = TTYtest.new_terminal('printf "\033[5A"')
-      @tty.assert_cursor_position(y: 0, x: 0)
+      @tty.assert_cursor_position(0, 0)
 
       @tty = TTYtest.new_terminal('printf "\033[5B"')
-      @tty.assert_cursor_position(y: 5, x: 0)
+      @tty.assert_cursor_position(0, 5)
 
       @tty = TTYtest.new_terminal('printf "\033[5C"')
-      @tty.assert_cursor_position(y: 0, x: 5)
+      @tty.assert_cursor_position(5, 0)
 
       @tty = TTYtest.new_terminal('printf "\033[5D"')
-      @tty.assert_cursor_position(y: 0, x: 0)
+      @tty.assert_cursor_position(0, 0)
     end
 
     def test_clear_screen
@@ -117,7 +117,7 @@ module TTYtest
 
       @tty.send_keys("\n")
 
-      @tty.assert_contents("")
+      @tty.assert_contents('')
     end
   end
 end

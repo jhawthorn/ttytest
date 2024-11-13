@@ -1,5 +1,4 @@
-
-require "test_helper"
+require 'test_helper'
 
 module TTYtest
   class TmuxDriverTest < Minitest::Test
@@ -27,7 +26,7 @@ module TTYtest
         end
       end
 
-      @driver = TTYtest::Tmux::Driver.new(command: "tmux_command_not_found")
+      @driver = TTYtest::Tmux::Driver.new(command: 'tmux_command_not_found')
       assert !@driver.available?
       assert_raises TTYtest::Tmux::Driver::TmuxError do
         @driver.new_terminal('')
@@ -37,7 +36,7 @@ module TTYtest
     def with_fake_tmux_command(version)
       file = Tempfile.new('ttytest_fake_tmux')
       begin
-        file.chmod(0700)
+        file.chmod(0o700)
         file.puts <<RUBY
 echo 'tmux #{version}'
 RUBY
@@ -45,7 +44,7 @@ RUBY
         yield file.path
       ensure
         file.close
-        file.unlink   # deletes the temp file
+        file.unlink # deletes the temp file
       end
     end
 
