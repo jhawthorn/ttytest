@@ -12,7 +12,7 @@ module TTYtest
       COMMAND = 'tmux'
       SOCKET_NAME = 'ttytest'
       REQUIRED_TMUX_VERSION = '1.8'
-      DEFAULT_CONFING_FILE_PATH = File.expand_path('../tmux.conf', __FILE__)
+      DEFAULT_CONFING_FILE_PATH = File.expand_path('tmux.conf', __dir__)
       SLEEP_INFINITY = 'read x < /dev/fd/1'
 
       class TmuxError < StandardError; end
@@ -45,11 +45,13 @@ module TTYtest
 
         stdout, stderr, status = Open3.capture3(@tmux_cmd, '-L', SOCKET_NAME, *args)
         raise TmuxError, "tmux(#{args.inspect[1...-1]}) failed\n#{stderr}" unless status.success?
+
         stdout
       end
 
       def available?
         return false unless tmux_version
+
         @available ||= (Gem::Version.new(tmux_version) >= Gem::Version.new(REQUIRED_TMUX_VERSION))
       end
 
@@ -60,13 +62,10 @@ module TTYtest
       end
 
       def ensure_available
-        if !available?
-          if !tmux_version
-            raise TmuxError, "Running `tmux -V` to determine version failed. Is tmux installed?"
-          else
-            raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= #{REQUIRED_TMUX_VERSION}"
-          end
-        end
+        return if available?
+        raise TmuxError, 'Running `tmux -V` to determine version failed. Is tmux installed?' unless tmux_version
+
+        raise TmuxError, "tmux version #{tmux_version} does not meet requirement >= #{REQUIRED_TMUX_VERSION}"
       end
 
       def tmux_version

@@ -7,14 +7,13 @@ module TTYtest
   class Capture
     include TTYtest::Matchers
 
-    attr_reader :cursor_x, :cursor_y
-    attr_reader :width, :height
+    attr_reader :cursor_x, :cursor_y, :width, :height
 
     # Used internally by drivers when called by {Terminal#capture}
     # @api private
     def initialize(contents, cursor_x: 0, cursor_y: 0, width: nil, height: nil, cursor_visible: true)
-      @rows = (contents+"\nEND").split("\n")[0...-1].map do |row|
-        row || ""
+      @rows = "#{contents}\nEND".split("\n")[0...-1].map do |row|
+        row || ''
       end
       @cursor_x = cursor_x
       @cursor_y = cursor_y
@@ -24,9 +23,7 @@ module TTYtest
     end
 
     # @return [Array<String>] An array of each row's contend from the captured terminal
-    def rows
-      @rows
-    end
+    attr_reader :rows
 
     # @param [Integer] the row to return
     # @return [String] the content of the row from the captured terminal
