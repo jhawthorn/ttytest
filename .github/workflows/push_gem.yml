@@ -1,0 +1,34 @@
+name: Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Ruby 3.2.3
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2.3
+        bundler-cache: true
+    - name: Build and test with Rake
+      run: |
+        bundle install --jobs 4 --retry 3
+        bundle exec rake
+  push:
+    name: Push gem to RubyGems.org
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # mandatory for trusted publishing
+      contents: write # mandatory for trusted publishing
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby 3.2.3
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2.3
+          bundler-cache: true
+      - uses: rubygems/release-gem@v1
