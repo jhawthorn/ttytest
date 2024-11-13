@@ -18,8 +18,6 @@ module TTYtest
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row_like(row_number, expected)
-      raise MatchError, "expected a value for 'expected' but recieved nil" if actual.nil?
-
       expected = expected.rstrip
       actual = row(row_number)
       return if actual.include?(expected)
