@@ -6,7 +6,7 @@ Forked from https://github.com/jhawthorn/ttytest, because I had some features I 
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
-[![Gem Version](https://badge.fury.io/rb/ttytest.svg)](https://rubygems.org/gems/ttytest2)
+[![Gem Version](https://badge.fury.io/rb/ttytest2.svg)](https://rubygems.org/gems/ttytest2)
 
 ## Minimum Requirements
 
@@ -18,6 +18,8 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 ### Example
 
 ``` ruby
+require 'ttytest'
+
 @tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
 @tty.assert_row(0, '$')
 @tty.assert_cursor_position(x: 2, y: 0)
