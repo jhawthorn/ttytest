@@ -6,7 +6,10 @@ Forked from https://github.com/jhawthorn/ttytest, because I had some features I 
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
-[![Gem Version](https://badge.fury.io/rb/ttytest2.svg)](https://rubygems.org/gems/ttytest2)
+[![Gem Version](https://badge.fury.io/rb/ttytest2.svg)](https://badge.fury.io/rb/ttytest2)
+
+## Gem at RubyGems.org
+https://rubygems.org/gems/ttytest2
 
 ## Minimum Requirements
 
@@ -15,7 +18,8 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 
 ## Usage
 
-### Example
+### Example Canonical CLI/Shell
+Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it. Most are canonical.
 
 ``` ruby
 require 'ttytest'
@@ -34,6 +38,21 @@ TTY
 @tty.assert_cursor_position(x: 2, y: 2)
 
 p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
+```
+
+### Example Noncanonical CLI/Shell
+If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.
+
+``` ruby
+require 'ttytest'
+
+@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/noncanonical-sh}, width: 80, height: 24)
+@tty.assert_row_starts_with(0, ENV['USER'])
+@tty.assert_row_ends_with(0, '$')
+
+@tty.send_keys_one_at_a_time('ls')
+@tty.assert_row_ends_with(0, 'ls')
+@tty.send_keys_one_at_a_time(%(\n))
 ```
 
 ### Assertions

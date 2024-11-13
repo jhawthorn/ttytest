@@ -2,7 +2,7 @@
 
 module TTYtest
   module Tmux
-    # tmux session manager
+    # represents a tmux session and how to send output to the current tmux session
     class Session
       # @api private
       def initialize(driver, name)
@@ -40,6 +40,12 @@ module TTYtest
 
       def send_keys(*keys)
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
+      end
+
+      def send_keys_one_at_a_time(*keys)
+        keys.each do |key|
+          driver.tmux(*%W[send-keys -t #{name} -l], key)
+        end
       end
 
       private
