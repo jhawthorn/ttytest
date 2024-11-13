@@ -11,7 +11,7 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 ## Minimum Requirements
 
 * tmux >= 1.8
-* Ruby >= 2.1
+* Ruby >= 3.2.3
 
 ## Usage
 
