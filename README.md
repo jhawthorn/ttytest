@@ -50,11 +50,11 @@ Available assertions:
 
 Easy to use from Docker. Add this to your dockerfile to get started.
 
-'''
+``` dockerfile
 RUN apt update && \
   apt install gcc make ruby tmux -y && \
   gem install ttytest
-'''
+```
 
 ## TravisCI
 
@@ -72,7 +72,7 @@ addons:
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/jhawthorn/ttytest.
+Bug reports and pull requests are welcome on GitHub at https://github.com/a-eski/ttytest2.
 
 ## License
 
