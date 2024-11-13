@@ -60,12 +60,13 @@ module TTYtest
 
     private
 
-    def synchronize(seconds=max_wait_time)
+    def synchronize(seconds = max_wait_time)
       start_time = Time.now
       begin
         yield
       rescue MatchError => e
         raise e if (Time.now - start_time) >= seconds
+
         sleep 0.05
         retry
       end

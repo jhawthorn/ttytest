@@ -7,9 +7,25 @@ module TTYtest
     def assert_row(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
-      if actual != expected
-        raise MatchError, "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{to_s}"
-      end
+      return unless actual != expected
+
+      raise MatchError,
+            "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
+    end
+
+    # Asserts the contents of a single row
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
+    # @raise [MatchError] if the row doesn't match
+    def assert_row_like(row_number, expected)
+      raise MatchError, "expected a value for 'expected' but recieved nil" if actual.nil?
+
+      expected = expected.rstrip
+      actual = row(row_number)
+      return if actual.include?(expected)
+
+      raise MatchError,
+            "expected row #{row_number} to be like #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
     # Asserts that the cursor is in the expected position
@@ -19,23 +35,24 @@ module TTYtest
     def assert_cursor_position(x:, y:)
       expected = [x, y]
       actual = [cursor_x, cursor_y]
-      if actual != expected
-        raise MatchError, "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{to_s}"
-      end
+      return unless actual != expected
+
+      raise MatchError,
+            "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
     # @raise [MatchError] if the cursor is hidden
     def assert_cursor_visible
-      if !cursor_visible?
-        raise MatchError, "expected cursor to be visible was hidden\nEntire screen:\n#{to_s}"
-      end
+      return if cursor_visible?
+
+      raise MatchError, "expected cursor to be visible was hidden\nEntire screen:\n#{self}"
     end
 
     # @raise [MatchError] if the cursor is visible
     def assert_cursor_hidden
-      if !cursor_hidden?
-        raise MatchError, "expected cursor to be hidden was visible\nEntire screen:\n#{to_s}"
-      end
+      return if cursor_hidden?
+
+      raise MatchError, "expected cursor to be hidden was visible\nEntire screen:\n#{self}"
     end
 
     # Asserts the full contents of the terminal
@@ -46,7 +63,7 @@ module TTYtest
       diff = []
       matched = true
       rows.each_with_index do |actual_row, index|
-        expected_row = (expected_rows[index] || "").rstrip
+        expected_row = (expected_rows[index] || '').rstrip
         if actual_row != expected_row
           diff << "-#{expected_row}"
           diff << "+#{actual_row}"
@@ -56,11 +73,11 @@ module TTYtest
         end
       end
 
-      if !matched
-        raise MatchError, "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
-      end
+      return if matched
+
+      raise MatchError, "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
     end
-    alias_method :assert_matches, :assert_contents
+    alias assert_matches assert_contents
 
     METHODS = public_instance_methods
   end

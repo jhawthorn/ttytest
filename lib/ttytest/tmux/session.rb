@@ -18,11 +18,13 @@ module TTYtest
 
       def capture
         contents = driver.tmux(*%W[capture-pane -t #{name} -p])
-        str = driver.tmux(*%W[display-message -t #{name} -p #\{cursor_x},#\{cursor_y},#\{cursor_flag},#\{pane_width},#\{pane_height},#\{pane_dead},#\{pane_dead_status},])
+        str = driver.tmux(*%W[display-message -t #{name} -p
+                              #\{cursor_x},#\{cursor_y},#\{cursor_flag},#\{pane_width},#\{pane_height},#\{pane_dead},#\{pane_dead_status},])
         x, y, cursor_flag, width, height, pane_dead, pane_dead_status, _newline = str.split(',')
 
-        if pane_dead == "1"
-          raise Driver::TmuxError, "Tmux pane has died\nCommand exited with status: #{pane_dead_status}\nEntire screen:\n#{contents}"
+        if pane_dead == '1'
+          raise Driver::TmuxError,
+                "Tmux pane has died\nCommand exited with status: #{pane_dead_status}\nEntire screen:\n#{contents}"
         end
 
         TTYtest::Capture.new(
