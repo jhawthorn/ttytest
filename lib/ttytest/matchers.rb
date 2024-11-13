@@ -1,4 +1,5 @@
 module TTYtest
+  # Assertions for ttytest2.
   module Matchers
     # Asserts the contents of a single row
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -7,15 +8,15 @@ module TTYtest
     def assert_row(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
-      return unless actual != expected
+      return if actual == expected
 
       raise MatchError,
             "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
-    # Asserts the contents of a single row
+    # Asserts the contents of a single row contains expected
     # @param [Integer] row_number the row (starting from 0) to test against
-    # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
+    # @param [String] expected the expected value contained in the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row_like(row_number, expected)
       expected = expected.rstrip
@@ -26,6 +27,32 @@ module TTYtest
             "expected row #{row_number} to be like #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
+    # Asserts the contents of a single row start with expected
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
+    # @raise [MatchError] if the row doesn't match
+    def assert_row_starts_with(row_number, expected)
+      expected = expected.rstrip
+      actual = row(row_number)
+      return if actual.start_with?(expected)
+
+      raise MatchError,
+            "expected row #{row_number} to start with #{expected.inspect} and got #{actual.inspect}\nEntire screen:\n#{self}"
+    end
+
+    # Asserts the contents of a single row end with expected
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
+    # @raise [MatchError] if the row doesn't match
+    def assert_row_ends_with(row_number, expected)
+      expected = expected.rstrip
+      actual = row(row_number)
+      return if actual.end_with?(expected)
+
+      raise MatchError,
+            "expected row #{row_number} to end with #{expected.inspect} and got #{actual.inspect}\nEntire screen:\n#{self}"
+    end
+
     # Asserts that the cursor is in the expected position
     # @param [Integer] x cursor x (row) position, starting from 0
     # @param [Integer] y cursor y (column) position, starting from 0
@@ -33,7 +60,7 @@ module TTYtest
     def assert_cursor_position(x, y)
       expected = [x, y]
       actual = [cursor_x, cursor_y]
-      return unless actual != expected
+      return if actual == expected
 
       raise MatchError,
             "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{self}"

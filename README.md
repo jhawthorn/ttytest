@@ -43,6 +43,8 @@ The main way to use TTYtest is through assertions. When called on a `TTYtest::Te
 Available assertions:
 * `assert_row(row_number, expected_text)`
 * `assert_row_like(row_number, expected_text)`
+* `assert_row_starts_with(row_number, expected_text)`
+* `assert_row_ends_with(row_number, expected_text)`
 * `assert_cursor_position(x: x, y: y)`
 * `assert_cursor_visible`
 * `assert_cursor_hidden`
