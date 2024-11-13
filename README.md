@@ -1,10 +1,14 @@
-TTYtest is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+# ttytest2
+
+TTYtest2 is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+
+Forked from https://github.com/jhawthorn/ttytest, because it seems the project is not maintained and I had some features I needed for my own project.
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
 [![Gem Version](https://badge.fury.io/rb/ttytest.svg)](https://rubygems.org/gems/ttytest)
 
-## Requirements
+## Minimum Requirements
 
 * tmux >= 1.8
 * Ruby >= 2.1
@@ -30,18 +34,27 @@ TTY
 p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
 ```
 
-See also [fzy's integration test](https://github.com/jhawthorn/fzy/blob/master/test/integration/integration_test.rb) for a full example.
-
 ### Assertions
 
 The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds by default).
 
 Available assertions:
 * `assert_row(row_number, expected_text)`
+* `assert_row_like(row_number, expected_text)`
 * `assert_cursor_position(x: x, y: y)`
 * `assert_cursor_visible`
 * `assert_cursor_hidden`
 * `assert_contents(lines_of_terminal)`
+
+## Docker
+
+Easy to use from Docker. Add this to your dockerfile to get started.
+
+'''
+RUN apt update && \
+  apt install gcc make ruby tmux -y && \
+  gem install ttytest
+'''
 
 ## TravisCI
 
