@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTYtest
   # Represents the complete state of a {TTYtest::Terminal} at the time it was captured (contents, cursor position, etc).
   # @attr_reader [Integer] width the number of columns in the captured terminal

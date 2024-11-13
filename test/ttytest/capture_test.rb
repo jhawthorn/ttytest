@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 module TTYtest
@@ -38,12 +40,12 @@ module TTYtest
 
     def test_to_s
       @capture = Capture.new("0\n1\n2\n3\n", width: 20, height: 5)
-      assert_equal <<TERM, @capture.to_s
-0
-1
-2
-3
-TERM
+      assert_equal <<~TERM, @capture.to_s
+        0
+        1
+        2
+        3
+      TERM
     end
   end
 end

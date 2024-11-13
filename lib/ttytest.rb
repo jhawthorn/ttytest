@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 require 'forwardable'
 require 'ttytest/tmux/driver'
 require 'ttytest/tmux/session'
 
+# ttytest2 main module
 module TTYtest
   class << self
     attr_accessor :driver, :default_max_wait_time
