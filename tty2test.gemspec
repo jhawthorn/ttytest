@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['alexeski@gmail.com']
 
   spec.summary       = 'ttytest2 is an integration test framework for interactive tty applications. Based on TTYtest!'
-  spec.description   = 'ttytest2 allows running applications inside of a terminal emulator (like tmux) and making assertions on the output.'
+  spec.description   = 'ttytest2 allows running shell and/or cli applications inside of tmux and then making assertions on the output.'
   spec.homepage      = 'https://github.com/a-eski/ttytest2'
   spec.license       = 'MIT'
 
@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.1.0'
+  spec.required_ruby_version = '>= 3.2.3'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'minitest', '~> 5.0'

@@ -2,7 +2,7 @@
 
 TTYtest2 is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
 
-Forked from https://github.com/jhawthorn/ttytest, because it seems the project is not maintained and I had some features I needed for my own project.
+Forked from https://github.com/jhawthorn/ttytest, because I had some features I needed for my own project.
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
@@ -11,7 +11,7 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 ## Minimum Requirements
 
 * tmux >= 1.8
-* Ruby >= 2.1
+* Ruby >= 3.2.3
 
 ## Usage
 
@@ -53,7 +53,7 @@ Easy to use from Docker. Add this to your dockerfile to get started.
 ``` dockerfile
 RUN apt update && \
   apt install gcc make ruby tmux -y && \
-  gem install ttytest
+  gem install ttytest2
 ```
 
 ## TravisCI
