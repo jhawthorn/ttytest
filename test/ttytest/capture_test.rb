@@ -4,7 +4,7 @@ module TTYtest
   class CaptureTest < Minitest::Test
     def test_rows
       @capture = Capture.new("0\n1\n2\n3")
-      assert_equal ['0', '1', '2', '3'], @capture.rows
+      assert_equal %w[0 1 2 3], @capture.rows
     end
 
     def test_row
@@ -16,22 +16,22 @@ module TTYtest
     end
 
     def test_cursor_visibility
-      @capture = Capture.new("", cursor_visible: true)
+      @capture = Capture.new('', cursor_visible: true)
       assert @capture.cursor_visible?
       assert !@capture.cursor_hidden?
 
-      @capture = Capture.new("", cursor_visible: false)
+      @capture = Capture.new('', cursor_visible: false)
       assert !@capture.cursor_visible?
       assert @capture.cursor_hidden?
     end
 
     def test_dimensions
       # If unspecified, dimensions are nil
-      @capture = Capture.new("")
+      @capture = Capture.new('')
       assert_nil @capture.width
       assert_nil @capture.height
 
-      @capture = Capture.new("", width: 80, height: 24)
+      @capture = Capture.new('', width: 80, height: 24)
       assert_equal 80, @capture.width
       assert_equal 24, @capture.height
     end

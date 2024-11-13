@@ -32,7 +32,7 @@ module TTYtest
     # @param [Integer] x cursor x (row) position, starting from 0
     # @param [Integer] y cursor y (column) position, starting from 0
     # @raise [MatchError] if the cursor position doesn't match
-    def assert_cursor_position(x:, y:)
+    def assert_cursor_position(x, y)
       expected = [x, y]
       actual = [cursor_x, cursor_y]
       return unless actual != expected

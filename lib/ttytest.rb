@@ -4,8 +4,7 @@ require 'ttytest/tmux/session'
 
 module TTYtest
   class << self
-    attr_accessor :driver
-    attr_accessor :default_max_wait_time
+    attr_accessor :driver, :default_max_wait_time
 
     extend Forwardable
     # @!method new_terminal(command, width: 80, height: 24)
