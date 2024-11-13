@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TTYtest
   # Assertions for ttytest2.
   module Matchers

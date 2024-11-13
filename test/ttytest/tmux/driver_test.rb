@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 module TTYtest
@@ -37,9 +39,9 @@ module TTYtest
       file = Tempfile.new('ttytest_fake_tmux')
       begin
         file.chmod(0o700)
-        file.puts <<RUBY
-echo 'tmux #{version}'
-RUBY
+        file.puts <<~RUBY
+          echo 'tmux #{version}'
+        RUBY
         file.close
         yield file.path
       ensure
