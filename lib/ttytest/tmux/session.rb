@@ -42,8 +42,8 @@ module TTYtest
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
       end
 
-      def send_keys_one_at_a_time(*keys)
-        keys.each do |key|
+      def send_keys_one_at_a_time(keys)
+        keys.split('').each do |key|
           driver.tmux(*%W[send-keys -t #{name} -l], key)
         end
       end
