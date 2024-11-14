@@ -1,8 +1,8 @@
 # ttytest2
 
-TTYtest2 is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+ttytest2 is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
 
-Forked from https://github.com/jhawthorn/ttytest, because I had some features I needed for my own project.
+A drop-in replacement for https://github.com/jhawthorn/ttytest, because I had some features I needed for my own project.
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
@@ -31,6 +31,7 @@ Available assertions:
 
 
 ### Example Canonical CLI/Shell
+
 Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it. Most are canonical.
 
 ``` ruby
@@ -53,7 +54,10 @@ p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ..
 ```
 
 ### Example Noncanonical CLI/Shell
-If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.
+
+If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.<br /><br />
+Also useful if you need to send input one character at a time for whatever reason.<br /><br />
+'Multi-character' characters like '\n' need to be sent with send-keys, though.<br /><br />
 
 ``` ruby
 require 'ttytest'
@@ -65,6 +69,31 @@ require 'ttytest'
 @tty.send_keys_one_at_a_time('ls')
 @tty.assert_row_ends_with(0, 'ls')
 @tty.send_keys(%(\n)) # make sure to use send_keys for 'multi-character' characters like \n, \r, \t, etc.
+
+@tty.send_keys_one_at_a_time('ps')
+@tty.assert_row_ends_with(0, 'ps')
+@tty.send_keys(TTYtest:NEWLINE) # can use constants instead
+```
+
+### Constants
+
+There are some commonly used keys available as constants to make interacting with your shell/CLI easy. Most of them are self-evident, BACKSPACE is the same as hitting the backspace key on the keyboard.
+
+``` ruby
+  TTYtest::BACKSPACE
+  TTYtest::TAB
+  TTYtest::CTRLF
+  TTYtest::CTRLC
+  TTYtest::CTRLD
+  TTYtest::ESCAPE # escape character, will rename in the future when Escape key is added.
+  TTYtest::NEWLINE
+
+  TTYtest::UP_ARROW
+  TTYtest::DOWN_ARROW
+  TTYtest::RIGHT_ARROW
+  TTYtest::LEFT_ARROW
+
+  TTYtest::CLEAR # clear the screen
 ```
 
 ## Docker
