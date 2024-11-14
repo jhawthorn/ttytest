@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'ttytest/constants'
 require 'ttytest/tmux/driver'
 require 'ttytest/tmux/session'
 

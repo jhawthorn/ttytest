@@ -18,6 +18,21 @@ https://rubygems.org/gems/ttytest2
 
 ## Usage
 
+### Assertions
+
+The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds).
+
+Available assertions:
+* `assert_row(row_number, expected_text)`
+* `assert_row_like(row_number, expected_text)`
+* `assert_row_starts_with(row_number, expected_text)`
+* `assert_row_ends_with(row_number, expected_text)`
+* `assert_cursor_position(x: x, y: y)`
+* `assert_cursor_visible`
+* `assert_cursor_hidden`
+* `assert_contents(lines_of_terminal)`
+
+
 ### Example Canonical CLI/Shell
 Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it. Most are canonical.
 
@@ -52,22 +67,8 @@ require 'ttytest'
 
 @tty.send_keys_one_at_a_time('ls')
 @tty.assert_row_ends_with(0, 'ls')
-@tty.send_keys_one_at_a_time(%(\n))
+@tty.send_keys(%(\n)) # make sure to use send_keys for 'multi-character' characters like \n, \r, \t, etc.
 ```
-
-### Assertions
-
-The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds by default).
-
-Available assertions:
-* `assert_row(row_number, expected_text)`
-* `assert_row_like(row_number, expected_text)`
-* `assert_row_starts_with(row_number, expected_text)`
-* `assert_row_ends_with(row_number, expected_text)`
-* `assert_cursor_position(x: x, y: y)`
-* `assert_cursor_visible`
-* `assert_cursor_hidden`
-* `assert_contents(lines_of_terminal)`
 
 ## Docker
 
@@ -77,20 +78,9 @@ Easy to use from Docker. Add this to your dockerfile to get started.
 RUN apt update && \
   apt install gcc make ruby tmux -y && \
   gem install ttytest2
-```
 
-## TravisCI
-
-TTYtest can run on [TravisCI](https://travis-ci.org/), but the version of tmux made available with their default ubuntu 12.04 environment is too old. However the TravisCI ubuntu 14.04 "trusty" image provides tmux 1.8, which works great.
-
-Ensure the following is in your `.travis.yml` (see [this project's .travis.yml](./.travis.yml) for an example)
-
-``` yaml
-dist: trusty
-addons:
-  apt:
-    packages:
-    - tmux
+# add this if you have issues
+# ENV RUBYOPT="-KU -E utf-8:utf-8"
 ```
 
 ## Contributing
