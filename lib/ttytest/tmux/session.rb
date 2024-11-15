@@ -48,6 +48,10 @@ module TTYtest
         end
       end
 
+      def send_newline
+        driver.tmux(*%W[send-keys -t #{name} -l], %(\n))
+      end
+
       private
 
       attr_reader :driver, :name
