@@ -27,7 +27,7 @@ module TTYtest
     # @!method capture
     #   Capture the current state of the terminal
     #   @return [Capture] instantaneous state of the terminal when called
-    def_delegators :@driver_terminal, :send_keys, :send_keys_one_at_a_time, :capture
+    def_delegators :@driver_terminal, :send_keys, :send_keys_one_at_a_time, :send_newline, :capture
 
     # @!method rows
     #   @return [Array<String>]

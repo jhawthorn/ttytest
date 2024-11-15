@@ -29,6 +29,13 @@ Available assertions:
 * `assert_cursor_hidden`
 * `assert_contents(lines_of_terminal)`
 
+### Sending output
+
+You can send output to the terminal with the following calls.
+
+* `send_keys(output)`
+* `send_newline # equivalent to @tty.send_keys(%(\n))`
+* `send_keys_one_at_a_time(output)`
 
 ### Example Canonical CLI/Shell
 
@@ -81,11 +88,12 @@ There are some commonly used keys available as constants to make interacting wit
 
 ``` ruby
   TTYtest::BACKSPACE
+  TTYtest::DELETE
   TTYtest::TAB
   TTYtest::CTRLF
   TTYtest::CTRLC
   TTYtest::CTRLD
-  TTYtest::ESCAPE # escape character, will rename in the future when Escape key is added.
+  TTYtest::ESCAPE
 
   TTYtest::UP_ARROW
   TTYtest::DOWN_ARROW
