@@ -10,10 +10,10 @@ module TTYtest
   CTRLD = '\004'
   ESCAPE = 27.chr
 
-  UP_ARROW = '^[[A'
-  DOWN_ARROW = '^[[B'
-  RIGHT_ARROW = '^[[C'
-  LEFT_ARROW = '^[[D'
+  UP_ARROW = "#{ESCAPE}[A".freeze
+  DOWN_ARROW = "#{ESCAPE}[B".freeze
+  RIGHT_ARROW = "#{ESCAPE}[C".freeze
+  LEFT_ARROW = "#{ESCAPE}[D".freeze
 
   CLEAR = 'clear'
 end
