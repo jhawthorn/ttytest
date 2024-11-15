@@ -86,7 +86,6 @@ There are some commonly used keys available as constants to make interacting wit
   TTYtest::CTRLC
   TTYtest::CTRLD
   TTYtest::ESCAPE # escape character, will rename in the future when Escape key is added.
-  TTYtest::NEWLINE
 
   TTYtest::UP_ARROW
   TTYtest::DOWN_ARROW
