@@ -38,10 +38,15 @@ module TTYtest
         )
       end
 
+      # Send the array of keys as a string literal to tmux.
+      # Will not be interpreted as send-keys values like Enter, Escape, DC for Delete, etc.
+      # @param [%w()] keys the keys to send to tmux
       def send_keys(*keys)
         driver.tmux(*%W[send-keys -t #{name} -l], *keys)
       end
 
+      # Send a string of keys one character at a time as literals to tmux.
+      # @param [String] keys the keys to send one at a time to tmux
       def send_keys_one_at_a_time(keys)
         keys.split('').each do |key|
           driver.tmux(*%W[send-keys -t #{name} -l], key)
@@ -50,6 +55,22 @@ module TTYtest
 
       def send_newline
         driver.tmux(*%W[send-keys -t #{name} -l], %(\n))
+      end
+
+      def send_delete
+        send_keys_exact(%(DC))
+      end
+
+      def send_backspace
+        send_keys_exact(%(BSpace))
+      end
+
+      # Useful to send send-keys commands to tmux without sending them as a string literal.
+      # So you can send Escape for escape key, DC for delete, etc.
+      # Uses the same key bindings as bind-key as well. C-c represents Ctrl + C keys, F1 is F1 key, etc.
+      # @param [String] keys the keys to send to tmux
+      def send_keys_exact(keys)
+        driver.tmux(*%W[send-keys -t #{name}], keys)
       end
 
       private

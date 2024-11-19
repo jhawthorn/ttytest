@@ -40,12 +40,47 @@ module TTYtest
       end
     end
 
+    def test_assert_row_at_success
+      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture.assert_row_at(0, 0, 1, 'fo')
+      @capture.assert_row_at(1, 0, 1, 'ba')
+      @capture.assert_row_at(2, 1, 2, 'az')
+      @capture.assert_row_at(2, 2, 2, 'z')
+      @capture.assert_row_at(3, 0, 0, '')
+    end
+
+    def test_assert_row_at_failure
+      @capture = Capture.new(EMPTY)
+      assert_raises TTYtest::MatchError do
+        @capture.assert_row_at(0, 0, 2, 'foo')
+      end
+    end
+
+    def test_assert_row_at_trailing_whitespace
+      @capture = Capture.new('')
+      @capture.assert_row_at(0, 0, 0, ' ')
+      @capture.assert_row_at(0, 0, 0, '   ')
+
+      @capture = Capture.new('foo')
+      @capture.assert_row_at(0, 1, 2, 'oo ')
+      @capture.assert_row_at(0, 2, 2, 'o  ')
+      @capture.assert_row_at(0, 0, 2, 'foo   ')
+
+      @capture = Capture.new(' foo')
+      @capture.assert_row_at(0, 0, 2, ' fo')
+      @capture.assert_row_at(0, 1, 3, 'foo')
+      @capture.assert_row_at(0, 0, 3, ' foo ')
+      assert_raises TTYtest::MatchError do
+        @capture.assert_row_at(0, 0, 2, 'bar')
+      end
+    end
+
     def test_assert_row_like_success
       @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
       @capture.assert_row_like(0, 'fo')
       @capture.assert_row_like(1, 'ba')
       @capture.assert_row_like(2, 'az')
-      @capture.assert_row(3, '')
+      @capture.assert_row_like(3, '')
     end
 
     def test_assert_row_like_failure
