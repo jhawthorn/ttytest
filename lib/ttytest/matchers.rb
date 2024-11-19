@@ -3,10 +3,10 @@
 module TTYtest
   # Assertions for ttytest2.
   module Matchers
-    # Asserts the contents of a single row
+    # Asserts the contents of a single row match the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
-    # @raise [MatchError] if the row doesn't match
+    # @raise [MatchError] if the row doesn't match exactly
     def assert_row(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
@@ -16,7 +16,25 @@ module TTYtest
             "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
-    # Asserts the contents of a single row contains expected
+    # Asserts the contents of a single row contains the expected string at a specific position
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @param [Integer] column_start the column position to start comparing expected against
+    # @param [Integer] columns_end the column position to end comparing expected against
+    # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
+    # @raise [MatchError] if the row doesn't match
+    def assert_row_at(row_number, column_start, column_end, expected)
+      expected = expected.rstrip
+      actual = row(row_number)
+      column_end += 1 if column_end.positive?
+      return if actual[column_start, column_end].eql?(expected)
+
+      raise MatchError,
+            "expected row #{row_number} to contain #{expected[column_start,
+                                                              column_end]} at #{column_start}-#{column_end} and got #{actual[column_start,
+                                                                                                                             column_end]}\nEntire screen:\n#{self}"
+    end
+
+    # Asserts the contents of a single row contains the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value contained in the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
@@ -29,7 +47,7 @@ module TTYtest
             "expected row #{row_number} to be like #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
-    # Asserts the contents of a single row start with expected
+    # Asserts the contents of a single row starts with expected string
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match

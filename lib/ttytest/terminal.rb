@@ -21,13 +21,23 @@ module TTYtest
     # @!method send_keys(*keys)
     #   Simulate typing keys into the terminal. For canonical cli's/shells which read line by line.
     #   @param [String] keys keys to send to the terminal
-    # @!method send_keys_one_at_a_time(*keys)
+    # @!method send_keys_one_at_a_time(keys)
     #   Simulate typing keys into the terminal. For noncanonical cli's/shells which read character by character.
     #   @param [String] keys keys to send to the terminal
+    # @!method send_newline
+    #   Simulate typing enter by sending newline character to the terminal.
+    # @!method send_delete
+    #   Simulate typing the delete key in the terminal.
+    # @!method send_backspace
+    #   Simulate typing the backspace key in the terminal.
+    # @!method send_keys_exact
+    #   Send tmux send-keys command to the terminal, such as DC or Enter, to simulate pressing that key in the terminal.
     # @!method capture
     #   Capture the current state of the terminal
     #   @return [Capture] instantaneous state of the terminal when called
-    def_delegators :@driver_terminal, :send_keys, :send_keys_one_at_a_time, :send_newline, :capture
+    def_delegators :@driver_terminal,
+                   :send_keys, :send_keys_one_at_a_time, :send_newline, :send_delete, :send_backspace, :send_keys_exact,
+                   :capture
 
     # @!method rows
     #   @return [Array<String>]

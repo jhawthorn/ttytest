@@ -88,7 +88,6 @@ There are some commonly used keys available as constants to make interacting wit
 
 ``` ruby
   TTYtest::BACKSPACE
-  TTYtest::DELETE
   TTYtest::TAB
   TTYtest::CTRLF
   TTYtest::CTRLC
