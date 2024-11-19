@@ -20,14 +20,15 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds).
 
 Available assertions:
-* `assert_row(row_number, expected_text)`
-* `assert_row_like(row_number, expected_text)`
-* `assert_row_starts_with(row_number, expected_text)`
-* `assert_row_ends_with(row_number, expected_text)`
-* `assert_cursor_position(x: x, y: y)`
-* `assert_cursor_visible`
-* `assert_cursor_hidden`
-* `assert_contents(lines_of_terminal)`
+* specify row matches expected text exactly: `assert_row(row_number, expected_text) `
+* specify expected position of expected text: `assert_row_at(row_number, column_start_position, column_end_position, expected_text)`
+* specify row contains expected text: `assert_row_like(row_number, expected_text)`
+* specify row starts with expected text: `assert_row_starts_with(row_number, expected_text)`
+* specify row ends with expected text: `assert_row_ends_with(row_number, expected_text)`
+* specify the current cursor position matches expected: `assert_cursor_position(x: x, y: y)`
+* specify the cursor is currently visible: `assert_cursor_visible`
+* specify the cursor is currently hidden: `assert_cursor_hidden`
+* specify the contents of the entire terminal window: `assert_contents(lines_of_terminal)`
 
 ### Sending output
 
@@ -80,6 +81,10 @@ require 'ttytest'
 @tty.send_keys_one_at_a_time('ps')
 @tty.assert_row_ends_with(0, 'ps')
 @tty.send_keys(TTYtest:NEWLINE) # can use constants instead
+
+@tty.assert_row_starts_with(0, ENV['USER'])
+@tty.assert_row_ends_with(0, '$')
+@tty.send_newline # an alternative to the 2 above methods to send \n to the terminal
 ```
 
 ### Constants
