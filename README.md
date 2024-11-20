@@ -30,13 +30,24 @@ Available assertions:
 * specify the cursor is currently hidden: `assert_cursor_hidden`
 * specify the contents of the entire terminal window: `assert_contents(lines_of_terminal)`
 
-### Sending output
+### Sending Output
 
 You can send output to the terminal with the following calls.
 
-* `send_keys(output)`
+* `send_keys(output) # for canonical shells/cli's (or multi-character keys for noncanonical shells/cli's)`
+* `send_keys_one_at_a_time(output) # for noncanonical shells/cli's`
+* `send_keys_exact(output) # for sending tmux specific keys (DC for delete, Escape for ESC, etc.)`
+
+### Output Helpers
+
+Helper functions to make sending output easier! They use the methods above under 'Sending Output' section under the hood.
+
 * `send_newline # equivalent to @tty.send_keys(%(\n))`
-* `send_keys_one_at_a_time(output)`
+* `send_newlines(number_of_times) # equivalent to calling send_newline number_of_times`
+* `send_backspace # equivalent to @tty.send_keys(TTYtest::BACKSPACE)`
+* `send_backspaces(number_of_times) # equivalent to calling send_backspace number_of_times`
+* `send_delete # equivalent to calling send_keys_exact(%(DC))`
+* `send_deletes # equivalent to calling send_delete number_of_times`
 
 ### Example Canonical CLI/Shell
 
