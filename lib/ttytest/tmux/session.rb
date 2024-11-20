@@ -57,12 +57,33 @@ module TTYtest
         driver.tmux(*%W[send-keys -t #{name} -l], %(\n))
       end
 
+      def send_newlines(number_of_times)
+        while number_of_times.positive?
+          send_newline
+          number_of_times -= 1
+        end
+      end
+
       def send_delete
         send_keys_exact(%(DC))
       end
 
+      def send_deletes(number_of_times)
+        while number_of_times.positive?
+          send_delete
+          number_of_times -= 1
+        end
+      end
+
       def send_backspace
         send_keys_exact(%(BSpace))
+      end
+
+      def send_backspaces(number_of_times)
+        while number_of_times.positive?
+          send_backspace
+          number_of_times -= 1
+        end
       end
 
       # Useful to send send-keys commands to tmux without sending them as a string literal.
