@@ -51,9 +51,13 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_delete` # equivalent to calling send_keys_exact(%(DC))
 * `send_deletes` # equivalent to calling send_delete number_of_times
 * `send_right_arrow`
+* `send_right_arrows(number_of_times)`
 * `send_left_arrow`
+* `send_left_arrows(number_of_times)`
 * `send_up_arrow`
+* `send_up_arrows(number_of_times)`
 * `send_down_arrow`
+* `send_down_arrows(number_of_times)`
 
 ### Troubleshooting
 
