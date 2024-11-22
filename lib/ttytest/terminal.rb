@@ -40,6 +40,8 @@ module TTYtest
                    :send_newline, :send_newlines,
                    :send_delete, :send_deletes,
                    :send_backspace, :send_backspaces,
+                   :send_left_arrow, :send_left_arrows, :send_right_arrow, :send_right_arrows,
+                   :send_down_arrow, :send_down_arrows, :send_up_arrow, :send_up_arrows,
                    :send_keys_exact,
                    :capture
 
