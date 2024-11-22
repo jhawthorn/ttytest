@@ -87,7 +87,7 @@ module TTYtest
       end
 
       def send_right_arrow
-        @tty.send_keys(TTYtest::RIGHT_ARROW)
+        send_keys(TTYtest::RIGHT_ARROW)
       end
 
       def send_right_arrows(number_of_times)
@@ -98,7 +98,7 @@ module TTYtest
       end
 
       def send_left_arrow
-        @tty.send_keys(TTYtest::LEFT_ARROW)
+        send_keys(TTYtest::LEFT_ARROW)
       end
 
       def send_left_arrows(number_of_times)
@@ -109,7 +109,7 @@ module TTYtest
       end
 
       def send_up_arrow
-        @tty.send_keys(TTYtest::UP_ARROW)
+        send_keys(TTYtest::UP_ARROW)
       end
 
       def send_up_arrows(number_of_times)
@@ -120,7 +120,7 @@ module TTYtest
       end
 
       def send_down_arrow
-        @tty.send_keys(TTYtest::DOWN_ARROW)
+        send_keys(TTYtest::DOWN_ARROW)
       end
 
       def send_down_arrows(number_of_times)
