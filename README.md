@@ -15,43 +15,59 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 
 ## Usage
 
+More documentation available at [(https://www.rubydoc.info/gems/ttytest2)].
+
 ### Assertions
 
 The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds).
 
 Available assertions:
-* specify row matches expected text exactly: `assert_row(row_number, expected_text) `
-* specify expected position of expected text: `assert_row_at(row_number, column_start_position, column_end_position, expected_text)`
-* specify row contains expected text: `assert_row_like(row_number, expected_text)`
-* specify row starts with expected text: `assert_row_starts_with(row_number, expected_text)`
-* specify row ends with expected text: `assert_row_ends_with(row_number, expected_text)`
-* specify the current cursor position matches expected: `assert_cursor_position(x: x, y: y)`
-* specify the cursor is currently visible: `assert_cursor_visible`
-* specify the cursor is currently hidden: `assert_cursor_hidden`
-* specify the contents of the entire terminal window: `assert_contents(lines_of_terminal)`
+* `assert_row(row_number, expected_text)`
+* `assert_row_at(row_number, column_start_position, column_end_position, expected_text)`
+* `assert_row_like(row_number, expected_text)`
+* `assert_row_starts_with(row_number, expected_text)`
+* `assert_row_ends_with(row_number, expected_text)`
+* `assert_cursor_position(x: x, y: y)`
+* `assert_cursor_visible`
+* `assert_cursor_hidden`
+* `assert_contents(lines_of_terminal)`
 
 ### Sending Output
 
 You can send output to the terminal with the following calls.
 
-* `send_keys(output) # for canonical shells/cli's (or multi-character keys for noncanonical shells/cli's)`
-* `send_keys_one_at_a_time(output) # for noncanonical shells/cli's`
+* `send_keys(output) # for canonical shells/CLI's (or multi-character keys for noncanonical shells/CLI's)`
+* `send_keys_one_at_a_time(output) # for noncanonical shells/CLI's`
 * `send_keys_exact(output) # for sending tmux specific keys (DC for delete, Escape for ESC, etc.)`
 
 ### Output Helpers
 
 Helper functions to make sending output easier! They use the methods above under 'Sending Output' section under the hood.
 
-* `send_newline # equivalent to @tty.send_keys(%(\n))`
-* `send_newlines(number_of_times) # equivalent to calling send_newline number_of_times`
-* `send_backspace # equivalent to @tty.send_keys(TTYtest::BACKSPACE)`
-* `send_backspaces(number_of_times) # equivalent to calling send_backspace number_of_times`
-* `send_delete # equivalent to calling send_keys_exact(%(DC))`
-* `send_deletes # equivalent to calling send_delete number_of_times`
+* `send_newline` # equivalent to @tty.send_keys(%(\n))
+* `send_newlines(number_of_times)` # equivalent to calling send_newline number_of_times
+* `send_backspace` # equivalent to @tty.send_keys(TTYtest::BACKSPACE)
+* `send_backspaces(number_of_times)` # equivalent to calling send_backspace number_of_times
+* `send_delete` # equivalent to calling send_keys_exact(%(DC))
+* `send_deletes` # equivalent to calling send_delete number_of_times
+* `send_right_arrow`
+* `send_left_arrow`
+* `send_up_arrow`
+* `send_down_arrow`
+
+### Troubleshooting
+
+You can use the method rows to get all rows of the terminal as an array, of use the method capture to get the contents of the terminal window. This can be useful when troubleshooting.
+
+``` ruby
+p @tty.rows # prints out the contents of the terminal as a array => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
+puts "\n#{@tty.capture}" # prints out the contents of the terminal
+```
 
 ### Example Canonical CLI/Shell
 
-Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it. Most are canonical.
+Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it! Most shell/CLI applications are canonical.<br /><br />
+There are more examples in the examples folder.
 
 ``` ruby
 require 'ttytest'
@@ -70,6 +86,8 @@ TTY
 @tty.assert_cursor_position(x: 2, y: 2)
 
 p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
+
+puts "\n#{@tty.capture}" # prints out the contents of the terminal
 ```
 
 ### Example Noncanonical CLI/Shell
@@ -77,6 +95,7 @@ p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ..
 If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.<br /><br />
 Also useful if you need to send input one character at a time for whatever reason.<br /><br />
 'Multi-character' characters like '\n' need to be sent with send-keys, though.<br /><br />
+There are more examples in the examples folder.
 
 ``` ruby
 require 'ttytest'
@@ -96,6 +115,8 @@ require 'ttytest'
 @tty.assert_row_starts_with(0, ENV['USER'])
 @tty.assert_row_ends_with(0, '$')
 @tty.send_newline # an alternative to the 2 above methods to send \n to the terminal
+
+puts "\n#{@tty.capture}" # prints out the contents of the terminal
 ```
 
 ### Constants

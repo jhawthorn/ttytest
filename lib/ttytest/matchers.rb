@@ -120,7 +120,8 @@ module TTYtest
 
       return if matched
 
-      raise MatchError, "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
+      raise MatchError,
+            "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
     end
     alias assert_matches assert_contents
 

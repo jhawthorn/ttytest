@@ -86,6 +86,50 @@ module TTYtest
         end
       end
 
+      def send_right_arrow
+        @tty.send_keys(TTYtest::RIGHT_ARROW)
+      end
+
+      def send_right_arrows(number_of_times)
+        while number_of_times.positive?
+          send_right_arrow
+          number_of_times -= 1
+        end
+      end
+
+      def send_left_arrow
+        @tty.send_keys(TTYtest::LEFT_ARROW)
+      end
+
+      def send_left_arrows(number_of_times)
+        while number_of_times.positive?
+          send_left_arrow
+          number_of_times -= 1
+        end
+      end
+
+      def send_up_arrow
+        @tty.send_keys(TTYtest::UP_ARROW)
+      end
+
+      def send_up_arrows(number_of_times)
+        while number_of_times.positive?
+          send_up_arrow
+          number_of_times -= 1
+        end
+      end
+
+      def send_down_arrow
+        @tty.send_keys(TTYtest::DOWN_ARROW)
+      end
+
+      def send_down_arrows(number_of_times)
+        while number_of_times.positive?
+          send_down_arrow
+          number_of_times -= 1
+        end
+      end
+
       # Useful to send send-keys commands to tmux without sending them as a string literal.
       # So you can send Escape for escape key, DC for delete, etc.
       # Uses the same key bindings as bind-key as well. C-c represents Ctrl + C keys, F1 is F1 key, etc.
