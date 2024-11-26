@@ -2,11 +2,29 @@
 
 ttytest2 is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
 
-A drop-in replacement for https://github.com/jhawthorn/ttytest, because I had some features I needed for my own project.
+A drop-in replacement for [ttytest](https://github.com/jhawthorn/ttytest), because I had some features I needed for my own project.
 
-It works by running commands inside a tmux session, capturing the pane, and comparing the content. The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
+It works by running commands inside a tmux session, capturing the pane, and comparing the content.
+
+The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
 
 [![Gem Version](https://badge.fury.io/rb/ttytest2.svg?icon=si%3Arubygems)](https://badge.fury.io/rb/ttytest2)
+
+## Table of Contents
+
+1. [Minimum Requirements](#minimum-requirements)
+2. [Usage](#usage)
+3. [Assertions](#assertions)
+4. [Output](#output)
+5. [Output Helpers](#output-helpers)
+6. [Troubleshooting](#troubleshooting)
+7. [Example for Canonical CLI or Shell](#example-for-canonical-cli-or-shell)
+8. [Example for Noncanonical CLI or Shell](#example-for-noncanonical-cli-or-shell)
+9. [Constants](#constants)
+10. [Tips](#tips)
+11. [Docker](#docker)
+12. [Contributing](#contributing)
+13. [License](#license)
 
 ## Minimum Requirements
 
@@ -15,13 +33,14 @@ It works by running commands inside a tmux session, capturing the pane, and comp
 
 ## Usage
 
-More documentation available at [(https://www.rubydoc.info/gems/ttytest2)].
+More documentation available at [ttytest2 docs][(https://www.rubydoc.info/gems/ttytest2)].
 
 ### Assertions
 
 The main way to use TTYtest is through assertions. When called on a `TTYtest::Terminal`, each of these will be retried (for up to 2 seconds).
 
 Available assertions:
+
 * `assert_row(row_number, expected_text)`
 * `assert_row_at(row_number, column_start_position, column_end_position, expected_text)`
 * `assert_row_like(row_number, expected_text)`
@@ -32,7 +51,7 @@ Available assertions:
 * `assert_cursor_hidden`
 * `assert_contents(lines_of_terminal)`
 
-### Sending Output
+### Output
 
 You can send output to the terminal with the following calls.
 
@@ -65,12 +84,16 @@ You can use the method rows to get all rows of the terminal as an array, of use 
 
 ``` ruby
 p @tty.rows # prints out the contents of the terminal as a array => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
+@tty.print_rows # equivalent to above, prints out contents of the terminal as an array
+
 puts "\n#{@tty.capture}" # prints out the contents of the terminal
+@tty.print # equivalent to above, prints out the content of the terminal
 ```
 
-### Example Canonical CLI/Shell
+### Example for Canonical CLI or Shell
 
-Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it! Most shell/CLI applications are canonical.<br /><br />
+Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it! Most shell/CLI applications are canonical.
+
 There are more examples in the examples folder.
 
 ``` ruby
@@ -94,11 +117,14 @@ p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ..
 puts "\n#{@tty.capture}" # prints out the contents of the terminal
 ```
 
-### Example Noncanonical CLI/Shell
+### Example for Noncanonical CLI or Shell
 
-If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.<br /><br />
-Also useful if you need to send input one character at a time for whatever reason.<br /><br />
-'Multi-character' characters like '\n' need to be sent with send-keys, though.<br /><br />
+If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.
+
+Also useful if you need to send input one character at a time for whatever reason.
+
+'Multi-character' characters like '\n' need to be sent with send-keys, though.
+
 There are more examples in the examples folder.
 
 ``` ruby
@@ -125,7 +151,7 @@ puts "\n#{@tty.capture}" # prints out the contents of the terminal
 
 ### Constants
 
-There are some commonly used keys available as constants to make interacting with your shell/CLI easy. Most of them are self-evident, BACKSPACE is the same as hitting the backspace key on the keyboard.
+There are some commonly used keys available as constants to make interacting with your shell/CLI easy.
 
 ``` ruby
   TTYtest::BACKSPACE
@@ -143,6 +169,12 @@ There are some commonly used keys available as constants to make interacting wit
   TTYtest::CLEAR # clear the screen
 ```
 
+### Tips
+
+If you are using ttyest2 to test your CLI, using sh is easier than bash because you don't have to worry about user, current working directory, etc. like in the examples above.
+
+If you are using ttytest2 to test your shell, using assertions like assert_row_like, assert_row_starts_with, and assert_row_ends_with are going to be extremely helpful, especially if trying to test your shell in different environments or using a docker container.
+
 ## Docker
 
 Easy to use from Docker. Add this to your dockerfile to get started.
@@ -158,7 +190,7 @@ RUN apt update && \
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/a-eski/ttytest2.
+Bug reports and pull requests are welcome on GitHub at [ttytest2](https://github.com/a-eski/ttytest2).
 
 ## License
 

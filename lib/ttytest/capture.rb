@@ -48,6 +48,14 @@ module TTYtest
       self
     end
 
+    def print
+      puts "\n#{self}"
+    end
+
+    def print_rows
+      puts rows
+    end
+
     # @return [String] All rows of the captured terminal, separated by newlines
     def to_s
       rows.join("\n")
