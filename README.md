@@ -33,7 +33,9 @@ The assertions will wait a specified amount of time (default 2 seconds) for the 
 
 ## Usage
 
-More documentation available at [ttytest2 docs][(https://www.rubydoc.info/gems/ttytest2)].
+More documentation available at [ttytest2 docs](https://www.rubydoc.info/gems/ttytest2).
+
+
 
 ### Assertions
 
