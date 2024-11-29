@@ -138,6 +138,14 @@ module TTYtest
         driver.tmux(*%W[send-keys -t #{name}], keys)
       end
 
+      def send_home
+        send_keys_exact(%(Home))
+      end
+
+      def send_end
+        send_keys_exact(%(End))
+      end
+
       private
 
       attr_reader :driver, :name

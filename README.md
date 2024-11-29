@@ -14,12 +14,12 @@ The assertions will wait a specified amount of time (default 2 seconds) for the 
 
 1. [Minimum Requirements](#minimum-requirements)
 2. [Usage](#usage)
-3. [Assertions](#assertions)
-4. [Output](#output)
-5. [Output Helpers](#output-helpers)
-6. [Troubleshooting](#troubleshooting)
-7. [Example for Canonical CLI or Shell](#example-for-canonical-cli-or-shell)
-8. [Example for Noncanonical CLI or Shell](#example-for-noncanonical-cli-or-shell)
+3. [Example for Canonical CLI or Shell](#example-for-canonical-cli-or-shell)
+4. [Example for Noncanonical CLI or Shell](#example-for-noncanonical-cli-or-shell)
+5. [Assertions](#assertions)
+6. [Output](#output)
+7. [Output Helpers](#output-helpers)
+8. [Troubleshooting](#troubleshooting)
 9. [Constants](#constants)
 10. [Tips](#tips)
 11. [Docker](#docker)
@@ -35,7 +35,63 @@ The assertions will wait a specified amount of time (default 2 seconds) for the 
 
 More documentation available at [ttytest2 docs](https://www.rubydoc.info/gems/ttytest2).
 
+There are more examples in the examples folder.
 
+### Example for Canonical CLI or Shell
+
+Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it! Most shell/CLI applications are canonical.
+
+``` ruby
+require 'ttytest'
+
+@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
+@tty.assert_row(0, '$')
+@tty.assert_cursor_position(x: 2, y: 0)
+
+@tty.send_keys(%{echo "Hello, world"\n})
+
+@tty.assert_contents <<TTY
+$ echo "Hello, world"
+Hello, world
+$
+TTY
+@tty.assert_cursor_position(x: 2, y: 2)
+
+@tty.print_rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
+
+@tty.print # prints out the contents of the terminal
+```
+
+### Example for Noncanonical CLI or Shell
+
+If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.
+
+Also useful if you need to send input one character at a time for whatever reason.
+
+'Multi-character' characters like '\n' need to be sent with send-keys, though.
+
+``` ruby
+require 'ttytest'
+
+@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/noncanonical-sh}, width: 80, height: 24)
+@tty.assert_row_starts_with(0, ENV['USER'])
+@tty.assert_row_ends_with(0, '$')
+
+@tty.send_keys_one_at_a_time('ls')
+@tty.assert_row_ends_with(0, 'ls')
+@tty.send_keys(%(\n)) # make sure to use send_keys for 'multi-character' characters like \n, \r, \t, etc.
+
+@tty.send_keys_one_at_a_time('ps')
+@tty.assert_row_ends_with(1, 'ps')
+@tty.send_keys(TTYtest:NEWLINE) # can use constants instead
+
+
+@tty.assert_row_starts_with(2, ENV['USER'])
+@tty.assert_row_ends_with(2, '$')
+@tty.send_newline # an alternative to the 2 above methods to send \n to the terminal
+
+puts "\n#{@tty.capture}" # prints out the contents of the terminal, equivalent to @tty.print
+```
 
 ### Assertions
 
@@ -79,76 +135,19 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_up_arrows(number_of_times)`
 * `send_down_arrow`
 * `send_down_arrows(number_of_times)`
+* `send_home` # simulate pressing the Home key
+* `send_end` # simulate pressing the End key
 
 ### Troubleshooting
 
 You can use the method rows to get all rows of the terminal as an array, of use the method capture to get the contents of the terminal window. This can be useful when troubleshooting.
 
 ``` ruby
-p @tty.rows # prints out the contents of the terminal as a array => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
-@tty.print_rows # equivalent to above, prints out contents of the terminal as an array
+p @tty.rows # prints out the contents of the terminal as a array
+@tty.print_rows # equivalent to above
 
 puts "\n#{@tty.capture}" # prints out the contents of the terminal
-@tty.print # equivalent to above, prints out the content of the terminal
-```
-
-### Example for Canonical CLI or Shell
-
-Most people should use send_keys, if you are writing or working with a noncanonical shell/CLI, you will probably know it! Most shell/CLI applications are canonical.
-
-There are more examples in the examples folder.
-
-``` ruby
-require 'ttytest'
-
-@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
-@tty.assert_row(0, '$')
-@tty.assert_cursor_position(x: 2, y: 0)
-
-@tty.send_keys(%{echo "Hello, world"\n})
-
-@tty.assert_contents <<TTY
-$ echo "Hello, world"
-Hello, world
-$
-TTY
-@tty.assert_cursor_position(x: 2, y: 2)
-
-p @tty.rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
-
-puts "\n#{@tty.capture}" # prints out the contents of the terminal
-```
-
-### Example for Noncanonical CLI or Shell
-
-If you are working with a noncanonical shell, you need to use send_keys_one_at_a_time to have your shell/CLI process the input correctly.
-
-Also useful if you need to send input one character at a time for whatever reason.
-
-'Multi-character' characters like '\n' need to be sent with send-keys, though.
-
-There are more examples in the examples folder.
-
-``` ruby
-require 'ttytest'
-
-@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/noncanonical-sh}, width: 80, height: 24)
-@tty.assert_row_starts_with(0, ENV['USER'])
-@tty.assert_row_ends_with(0, '$')
-
-@tty.send_keys_one_at_a_time('ls')
-@tty.assert_row_ends_with(0, 'ls')
-@tty.send_keys(%(\n)) # make sure to use send_keys for 'multi-character' characters like \n, \r, \t, etc.
-
-@tty.send_keys_one_at_a_time('ps')
-@tty.assert_row_ends_with(0, 'ps')
-@tty.send_keys(TTYtest:NEWLINE) # can use constants instead
-
-@tty.assert_row_starts_with(0, ENV['USER'])
-@tty.assert_row_ends_with(0, '$')
-@tty.send_newline # an alternative to the 2 above methods to send \n to the terminal
-
-puts "\n#{@tty.capture}" # prints out the contents of the terminal
+@tty.print # equivalent to above
 ```
 
 ### Constants
@@ -173,7 +172,7 @@ There are some commonly used keys available as constants to make interacting wit
 
 ### Tips
 
-If you are using ttyest2 to test your CLI, using sh is easier than bash because you don't have to worry about user, current working directory, etc. like in the examples above.
+If you are using ttyest2 to test your CLI, using sh is easier than bash because you don't have to worry about user, current working directory, etc. as shown in the examples above.
 
 If you are using ttytest2 to test your shell, using assertions like assert_row_like, assert_row_starts_with, and assert_row_ends_with are going to be extremely helpful, especially if trying to test your shell in different environments or using a docker container.
 
