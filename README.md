@@ -137,17 +137,20 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_down_arrows(number_of_times)`
 * `send_home` # simulate pressing the Home key
 * `send_end` # simulate pressing the End key
+* `send_clear` # clear the screen by sending clear ascii code
 
 ### Troubleshooting
 
 You can use the method rows to get all rows of the terminal as an array, of use the method capture to get the contents of the terminal window. This can be useful when troubleshooting.
 
 ``` ruby
-p @tty.rows # prints out the contents of the terminal as a array
-@tty.print_rows # equivalent to above
+# you can use @tty.rows to access the entire pane, split by line into an array.
+p @tty.rows # prints out the contents of the terminal as a array.
+@tty.print_rows # equivalent to above, just for ease of use.
 
-puts "\n#{@tty.capture}" # prints out the contents of the terminal
-@tty.print # equivalent to above
+# you can use @tty.capture to access the entire pane.
+p "\n#{@tty.capture}" # prints out the contents of the terminal
+@tty.print # equivalent to above, just for ease of use.
 ```
 
 ### Constants
