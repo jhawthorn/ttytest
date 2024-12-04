@@ -146,6 +146,11 @@ module TTYtest
         send_keys_exact(%(End))
       end
 
+      def send_clear
+        send_keys_one_at_a_time(TTYtest::CLEAR)
+        send_newline
+      end
+
       private
 
       attr_reader :driver, :name
