@@ -14,5 +14,5 @@ module TTYtest
   RIGHT_ARROW = "#{ESCAPE}[C".freeze
   LEFT_ARROW = "#{ESCAPE}[D".freeze
 
-  CLEAR = 'clear'
+  CLEAR = "#{ESCAPE}[2J".freeze
 end
