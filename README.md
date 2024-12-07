@@ -57,6 +57,13 @@ $
 TTY
 @tty.assert_cursor_position(x: 2, y: 2)
 
+@tty.assert_contents_at(0, 0, '$ echo "Hello, world"')
+
+@tty.assert_row_starts_with(0, '$ echo')
+@tty.assert_row_ends_with(0, '"Hello, world"')
+@tty.assert_row_starts_with(1, 'Hello')
+@tty.assert_row_ends_with(1, ', world')
+
 @tty.print_rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ...]
 
 @tty.print # prints out the contents of the terminal
@@ -79,16 +86,15 @@ require 'ttytest'
 
 @tty.send_keys_one_at_a_time('ls')
 @tty.assert_row_ends_with(0, 'ls')
-@tty.send_keys(%(\n)) # make sure to use send_keys for 'multi-character' characters like \n, \r, \t, etc.
+@tty.send_newline # builtins for common outputs line newline
 
 @tty.send_keys_one_at_a_time('ps')
 @tty.assert_row_ends_with(1, 'ps')
 @tty.send_keys(TTYtest:NEWLINE) # can use constants instead
 
-
 @tty.assert_row_starts_with(2, ENV['USER'])
 @tty.assert_row_ends_with(2, '$')
-@tty.send_newline # an alternative to the 2 above methods to send \n to the terminal
+@tty.send_newline
 
 puts "\n#{@tty.capture}" # prints out the contents of the terminal, equivalent to @tty.print
 ```
@@ -108,6 +114,7 @@ Available assertions:
 * `assert_cursor_visible`
 * `assert_cursor_hidden`
 * `assert_contents(lines_of_terminal)`
+* `assert_contents_at(row_start, row_end, expected_text)`
 
 ### Output
 

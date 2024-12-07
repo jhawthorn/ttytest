@@ -25,7 +25,7 @@ module TTYtest
     def assert_row_at(row_number, column_start, column_end, expected)
       expected = expected.rstrip
       actual = row(row_number)
-      column_end += 1 if column_end.positive?
+      column_end += 1
       return if actual[column_start, column_end].eql?(expected)
 
       raise MatchError,
@@ -124,6 +124,33 @@ module TTYtest
             "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
     end
     alias assert_matches assert_contents
+
+    # Asserts the contents of the terminal at specified rows
+    # @param [String] expected the expected contents of the terminal at specified rows. Trailing whitespace on each line is ignored
+    # @raise [MatchError] if the terminal doesn't match the expected content
+    def assert_contents_at(row_start, row_end, expected)
+      expected_rows = expected.split("\n")
+      diff = []
+      matched = true
+      row_end += 1 if row_end.zero?
+
+      rows.slice(row_start, row_end).each_with_index do |actual_row, index|
+        expected_row = (expected_rows[index] || '').rstrip
+        if actual_row != expected_row
+          diff << "-#{expected_row}"
+          diff << "+#{actual_row}"
+          matched = false
+        else
+          diff << " #{actual_row}".rstrip
+        end
+      end
+
+      return if matched
+
+      raise MatchError,
+            "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
+    end
+    alias assert_matches_at assert_contents_at
 
     METHODS = public_instance_methods
   end
