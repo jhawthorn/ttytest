@@ -61,13 +61,15 @@ module TTYtest
     #   @param [Integer] number of times to send up arrow
     # @!method send_keys_exact
     #   Send tmux send-keys command to the terminal, such as DC or Enter, to simulate pressing that key in the terminal.
+    # @!method send_home
+    #   Simulates typing in the Home key in the terminal.
+    # @!method send_end
+    #   Simulates typing in the End key in the terminal.
+    # @!method send_clear
+    #   Clears the screen in the terminal using ascii clear command.
     # @!method capture
     #   Capture the current state of the terminal
     #   @return [Capture] instantaneous state of the terminal when called
-    # @!method print
-    #   Prints the current state of the terminal to stdout. See capture to get the raw string.
-    # @!method print_rows
-    #   Prints the current state of the terminal as an array to stdout. See rows to get the raw array.
     def_delegators :@driver_terminal,
                    :send_keys, :send_keys_one_at_a_time,
                    :send_newline, :send_newlines,
@@ -78,6 +80,10 @@ module TTYtest
                    :send_keys_exact, :send_home, :send_end, :send_clear,
                    :capture
 
+    # @!method print
+    #   Prints the current state of the terminal to stdout. See capture to get the raw string.
+    # @!method print_rows
+    #   Prints the current state of the terminal as an array to stdout. See rows to get the raw array.
     # @!method rows
     #   @return [Array<String>]
     #   @see Capture#rows
