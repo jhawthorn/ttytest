@@ -370,7 +370,7 @@ TERM
         Hello, world
       TERM
 
-      @capture.assert_contents_at 0, 1, <<~TERM
+      @capture.assert_contents_at 1, 2, <<~TERM
         Hello, world
         $ echo "Hello, world"
       TERM
