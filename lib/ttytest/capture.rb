@@ -51,7 +51,10 @@ module TTYtest
     def print
       puts "\n#{self}"
     end
-    alias print_rows print
+
+    def print_rows
+      p rows
+    end
 
     # @return [String] All rows of the captured terminal, separated by newlines
     def to_s
