@@ -37,8 +37,10 @@ module TTYtest
       @capture.assert_row(0, "foo\n")
 
       @capture = Capture.new(' foo')
-      @capture.assert_row(0, ' foo')
       @capture.assert_row(0, ' foo ')
+      @capture.assert_row(0, ' foo  ')
+      @capture.assert_row(0, " foo\n")
+      @capture.assert_row(0, " foo  \n")
       assert_raises TTYtest::MatchError do
         @capture.assert_row(0, 'foo')
       end
@@ -82,14 +84,19 @@ module TTYtest
       @capture.assert_row_at(0, 0, 0, "   \n")
 
       @capture = Capture.new('foo')
+      @capture.assert_row_at(0, 1, 2, "oo\n")
       @capture.assert_row_at(0, 1, 2, 'oo ')
       @capture.assert_row_at(0, 2, 2, 'o  ')
       @capture.assert_row_at(0, 0, 2, 'foo   ')
+      @capture.assert_row_at(0, 0, 2, "foo   \n")
 
       @capture = Capture.new(' foo')
       @capture.assert_row_at(0, 0, 2, ' fo')
+      @capture.assert_row_at(0, 0, 2, ' fo ')
       @capture.assert_row_at(0, 1, 3, 'foo ')
+      @capture.assert_row_at(0, 1, 3, "foo\n")
       @capture.assert_row_at(0, 0, 3, ' foo ')
+      @capture.assert_row_at(0, 0, 3, " foo \n")
       assert_raises TTYtest::MatchError do
         @capture.assert_row_at(0, 0, 2, 'bar')
       end
@@ -99,10 +106,13 @@ module TTYtest
       @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
       @capture.assert_row_like(0, 'fo')
       @capture.assert_row_like(0, 'oo')
+      @capture.assert_row_like(0, 'f')
       @capture.assert_row_like(1, 'ba')
       @capture.assert_row_like(1, 'ar')
+      @capture.assert_row_like(1, 'a')
       @capture.assert_row_like(2, 'az')
       @capture.assert_row_like(2, 'ba')
+      @capture.assert_row_like(2, 'z')
       @capture.assert_row_like(3, '')
     end
 
@@ -124,11 +134,14 @@ module TTYtest
       @capture.assert_row_like(0, 'oo ')
       @capture.assert_row_like(0, 'o  ')
       @capture.assert_row_like(0, 'foo   ')
+      @capture.assert_row_like(0, "foo\n")
+      @capture.assert_row_like(0, "foo   \n")
 
       @capture = Capture.new(' foo')
-      @capture.assert_row_like(0, ' fo')
-      @capture.assert_row_like(0, 'foo')
+      @capture.assert_row_like(0, ' fo ')
+      @capture.assert_row_like(0, 'foo ')
       @capture.assert_row_like(0, ' foo ')
+      @capture.assert_row_like(0, " foo \n")
       assert_raises TTYtest::MatchError do
         @capture.assert_row_like(0, 'bar')
       end
@@ -139,12 +152,15 @@ module TTYtest
       @capture.assert_row_starts_with(0, 'f')
       @capture.assert_row_starts_with(0, 'fo')
       @capture.assert_row_starts_with(0, 'foo')
+
       @capture.assert_row_starts_with(1, 'b')
       @capture.assert_row_starts_with(1, 'ba')
       @capture.assert_row_starts_with(1, 'bar')
+
       @capture.assert_row_starts_with(2, 'b')
       @capture.assert_row_starts_with(2, 'ba')
       @capture.assert_row_starts_with(2, 'baz')
+
       @capture.assert_row_starts_with(3, '')
     end
 
@@ -157,17 +173,22 @@ module TTYtest
 
     def test_assert_row_starts_with_trailing_whitespace
       @capture = Capture.new('')
+      @capture.assert_row_starts_with(0, "\n")
+      @capture.assert_row_starts_with(0, "  \n")
       @capture.assert_row_starts_with(0, ' ')
       @capture.assert_row_starts_with(0, '   ')
 
       @capture = Capture.new('foo')
       @capture.assert_row_starts_with(0, 'f ')
+      @capture.assert_row_starts_with(0, "f  \n")
       @capture.assert_row_starts_with(0, 'fo ')
       @capture.assert_row_starts_with(0, 'fo  ')
 
       @capture = Capture.new(' foo')
       @capture.assert_row_starts_with(0, ' f ')
       @capture.assert_row_starts_with(0, ' fo ')
+      @capture.assert_row_starts_with(0, ' foo ')
+      @capture.assert_row_starts_with(0, " foo \n")
       assert_raises TTYtest::MatchError do
         @capture.assert_row_starts_with(0, 'foo')
       end
@@ -178,12 +199,15 @@ module TTYtest
       @capture.assert_row_ends_with(0, 'o')
       @capture.assert_row_ends_with(0, 'oo')
       @capture.assert_row_ends_with(0, 'foo')
+
       @capture.assert_row_ends_with(1, 'r')
       @capture.assert_row_ends_with(1, 'ar')
       @capture.assert_row_ends_with(1, 'bar')
+
       @capture.assert_row_ends_with(2, 'z')
       @capture.assert_row_ends_with(2, 'az')
       @capture.assert_row_ends_with(2, 'baz')
+
       @capture.assert_row_ends_with(3, '')
     end
 
@@ -199,12 +223,14 @@ module TTYtest
       @capture.assert_row_ends_with(0, 'o ')
       @capture.assert_row_ends_with(0, 'oo  ')
       @capture.assert_row_ends_with(0, 'foo   ')
+      @capture.assert_row_ends_with(0, "foo   \n")
 
       @capture = Capture.new(' foo')
       @capture.assert_row_ends_with(0, ' foo ')
       @capture.assert_row_ends_with(0, 'foo ')
       @capture.assert_row_ends_with(0, 'oo ')
       @capture.assert_row_ends_with(0, 'o ')
+      @capture.assert_row_ends_with(0, "o \n")
       assert_raises TTYtest::MatchError do
         @capture.assert_row_ends_with(0, 'bar')
       end
@@ -288,6 +314,7 @@ TERM
 
       @capture = Capture.new("\nfoo\n")
       @capture.assert_contents("\nfoo")
+      @capture.assert_contents("\nfoo ")
       @capture.assert_contents("\nfoo  ")
       @capture.assert_contents("  \nfoo \n ")
     end
@@ -296,17 +323,24 @@ TERM
       @capture = Capture.new(EMPTY)
       @capture.assert_contents_at(0, 0, '')
       @capture.assert_contents_at(0, 0, "\n")
+      @capture.assert_contents_at(0, 0, "  \n")
+      @capture.assert_contents_at(0, 0, "\n\n\n")
+
       @capture.assert_contents_at 0, 0, <<TERM
 TERM
 
       @capture = Capture.new <<~TERM
-        $ echo "Hello, world
+        $ echo "Hello, world"
         Hello, world
 
 
       TERM
+
+      @capture.assert_contents_at(0, 0, '$ echo "Hello, world"')
+      @capture.assert_contents_at(1, 1, 'Hello, world')
+
       @capture.assert_contents_at 0, 1, <<~TERM
-        $ echo "Hello, world
+        $ echo "Hello, world"
         Hello, world
       TERM
     end
@@ -330,6 +364,17 @@ TERM
         $ echo "Hello, world"
         Hello, world
       TERM
+
+      @capture.assert_contents_at 0, 1, <<~TERM
+        $ echo "Hello, world"
+        Hello, world
+      TERM
+
+      @capture.assert_contents_at 1, 2, <<~TERM
+        Hello, world
+        $ echo "Hello, world"
+      TERM
+
       @capture.assert_contents_at 0, 3, <<~TERM
         $ echo "Hello, world"
         Hello, world
