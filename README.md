@@ -146,11 +146,28 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_end` # simulate pressing the End key
 * `send_clear` # clear the screen by sending clear ascii code
 
+### Configurables
+
+Currently the only configuration for ttytest2 is max wait time.
+
+Max wait time represents the amount of time in seconds that ttytest2 will keep retrying an assertion before failing.
+
+You can configure max wait time as shown below.
+
+``` ruby
+@tty = TTYtest::new_terminal('')
+@tty.max_wait_time = 1 # sets the max wait time to 1 second
+
+@tty.assert_row(0, 'echo Hello, world') # this assertion would fail after 1 second
+```
+
 ### Troubleshooting
 
 You can use the method rows to get all rows of the terminal as an array, of use the method capture to get the contents of the terminal window. This can be useful when troubleshooting.
 
 ``` ruby
+@tty = TTYtest::new_terminal('')
+
 # you can use @tty.rows to access the entire pane, split by line into an array.
 p @tty.rows # prints out the contents of the terminal as a array.
 @tty.print_rows # equivalent to above, just for ease of use.
