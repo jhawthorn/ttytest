@@ -148,9 +148,11 @@ Helper functions to make sending output easier! They use the methods above under
 
 ### Configurables
 
-You can configure the max wait time (in seconds) for ttytest2 to wait before failing an assertion.
+Currently the only configuration for ttytest2 is max wait time.
 
-For the max wait time, ttytest2 keeps retrying the assertions.
+Max wait time represents the amount of time in seconds that ttytest2 will keep retrying an assertion before failing.
+
+You can configure max wait time as shown below.
 
 ``` ruby
 @tty = TTYtest::new_terminal('')
