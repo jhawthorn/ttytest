@@ -1,7 +1,7 @@
 to push new version to github
-git tag v0.9.7
+git tag v0.9.8
 git push origin --tags
 
 to push new version to rubygems.org
 gem build ttytest2.gemspec
-gem push ttytest2-0.9.7.gem
+gem push ttytest2-0.9.8.gem

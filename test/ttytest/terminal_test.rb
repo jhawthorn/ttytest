@@ -123,5 +123,11 @@ module TTYtest
       @tty = hello_world_test_helper
       @tty.print_rows
     end
+
+    def test_max_wait_time
+      @tty = TTYtest.new_terminal('')
+      @tty.max_wait_time = 1
+      assert_equal 1, @tty.max_wait_time
+    end
   end
 end
