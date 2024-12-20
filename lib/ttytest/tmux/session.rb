@@ -151,6 +151,10 @@ module TTYtest
         send_newline
       end
 
+      def send_escape
+        send_keys_exact(%(Escape))
+      end
+
       private
 
       attr_reader :driver, :name
