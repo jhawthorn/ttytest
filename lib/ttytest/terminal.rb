@@ -67,6 +67,8 @@ module TTYtest
     #   Simulates typing in the End key in the terminal.
     # @!method send_clear
     #   Clears the screen in the terminal using ascii clear command.
+    # @!method send_escape
+    #   Simulates typing in the Escape (ESC) key in the terminal.
     # @!method capture
     #   Capture the current state of the terminal
     #   @return [Capture] instantaneous state of the terminal when called
@@ -77,7 +79,7 @@ module TTYtest
                    :send_backspace, :send_backspaces,
                    :send_left_arrow, :send_left_arrows, :send_right_arrow, :send_right_arrows,
                    :send_down_arrow, :send_down_arrows, :send_up_arrow, :send_up_arrows,
-                   :send_keys_exact, :send_home, :send_end, :send_clear,
+                   :send_keys_exact, :send_home, :send_end, :send_clear, :send_escape,
                    :capture
 
     # @!method print
