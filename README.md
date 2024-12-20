@@ -146,6 +146,20 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_end` # simulate pressing the End key
 * `send_clear` # clear the screen by sending clear ascii code
 
+### F keys?
+
+Send F keys like F1, F2, etc. as shown below:
+
+``` ruby
+@tty = TTYtest.new_terminal(%{PS1='$ ' /bin/sh}, width: 80, height: 24)
+
+@tty.send_keys_exact(%(F1))
+@tty.send_keys_exact(%(F2))
+# ...
+@tty.send_keys_exact(%(F11))
+@tty.send_keys_exact(%(F12))
+```
+
 ### Configurables
 
 Currently the only configuration for ttytest2 is max wait time.
@@ -182,17 +196,26 @@ p "\n#{@tty.capture}" # prints out the contents of the terminal
 There are some commonly used keys available as constants to make interacting with your shell/CLI easy.
 
 ``` ruby
-  TTYtest::BACKSPACE
-  TTYtest::TAB
-  TTYtest::CTRLF
   TTYtest::CTRLC
   TTYtest::CTRLD
-  TTYtest::ESCAPE
+  TTYtest::CTRLF
+  TTYtest::BELL # ring the terminal bell
+  TTYtest::BACKSPACE
+  TTYtest::TAB
+  TTYtest::NEWLINE # \n
+  TTYtest::VERTICAL_TAB
+  TTYtest::FORM_FEED # \f or New Page NP
+  TTYtest::CARRIAGE_RETURN # \r
+  TTYtest::ESCAPE # 27 decimal or ^[ or /033
+  TTYtest::DELETE
 
   TTYtest::UP_ARROW
   TTYtest::DOWN_ARROW
   TTYtest::RIGHT_ARROW
   TTYtest::LEFT_ARROW
+
+  TTYtest::HOME_KEY
+  TTYtest::END_KEY
 
   TTYtest::CLEAR # clear the screen
 ```
