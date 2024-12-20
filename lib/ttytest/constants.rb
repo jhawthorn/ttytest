@@ -14,5 +14,8 @@ module TTYtest
   RIGHT_ARROW = "#{ESCAPE}[C".freeze
   LEFT_ARROW = "#{ESCAPE}[D".freeze
 
+  HOME_KEY = "#{ESCAPE}[H".freeze
+  END_KEY = "#{ESCAPE}[F".freeze
+
   CLEAR = "#{ESCAPE}[2J".freeze
 end

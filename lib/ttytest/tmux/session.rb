@@ -139,11 +139,11 @@ module TTYtest
       end
 
       def send_home
-        send_keys_exact(%(Home))
+        send_keys_exact(TTYtest::HOME_KEY)
       end
 
       def send_end
-        send_keys_exact(%(End))
+        send_keys_exact(TTYtest::END_KEY)
       end
 
       def send_clear
