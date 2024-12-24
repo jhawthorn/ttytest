@@ -9,7 +9,7 @@ module TTYtest
   class Terminal
     extend Forwardable
 
-    attr_accessor :max_wait_time, :methods
+    attr_accessor :max_wait_time
 
     # @api private
     # @see TTYtest.new_terminal
