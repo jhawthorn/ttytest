@@ -73,6 +73,20 @@ module TTYtest
             "expected row #{row_number} to end with #{expected.inspect} and got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
+    # Asserts the contents of a single row match against the passed in regular expression
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @param [String] regexp_str the regular expression as a string that will be used to match with.
+    # @raise [MatchError] if the row doesn't match against the regular expression
+    def assert_row_regexp(row_number, regexp_str)
+      regexp = Regexp.new(regexp_str)
+      actual = row(row_number)
+
+      return if actual.match?(regexp)
+
+      raise MatchError,
+            "expected row #{row_number} to match regexp #{regexp_str} but it did not. Row value #{actual.inspect}\nEntire screen:\n#{self}"
+    end
+
     # Asserts that the cursor is in the expected position
     # @param [Integer] x cursor x (row) position, starting from 0
     # @param [Integer] y cursor y (column) position, starting from 0

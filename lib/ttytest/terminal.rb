@@ -116,7 +116,7 @@ module TTYtest
                    :cursor_x, :cursor_y,
                    :cursor_visible?, :cursor_hidden?
 
-    TTYtest::Matchers::METHODS.each do |matcher_name|
+    Matchers::METHODS.each do |matcher_name|
       define_method matcher_name do |*args|
         synchronize do
           capture.public_send(matcher_name, *args)
