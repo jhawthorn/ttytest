@@ -4,37 +4,7 @@ require 'test_helper'
 
 module TTYtest
   class TmuxDriverTest < Minitest::Test
-    def test_availability
-      # Using actual tmux
-      @driver = TTYtest::Tmux::Driver.new
-      assert @driver.available?
-
-      # Using fake tmux which just prints 1.8
-      with_fake_tmux_command('1.8') do |cmd|
-        @driver = TTYtest::Tmux::Driver.new(command: cmd)
-        assert @driver.available?
-      end
-
-      with_fake_tmux_command('2.0') do |cmd|
-        @driver = TTYtest::Tmux::Driver.new(command: cmd)
-        assert @driver.available?
-      end
-
-      with_fake_tmux_command('1.7') do |cmd|
-        @driver = TTYtest::Tmux::Driver.new(command: cmd)
-        assert !@driver.available?
-        assert_raises TTYtest::Tmux::Driver::TmuxError do
-          @driver.new_terminal('')
-        end
-      end
-
-      @driver = TTYtest::Tmux::Driver.new(command: 'tmux_command_not_found')
-      assert !@driver.available?
-      assert_raises TTYtest::Tmux::Driver::TmuxError do
-        @driver.new_terminal('')
-      end
-    end
-
+    # Fake Tmux Command Test Helper: Fake a tmux command which just outputs the passed in version
     def with_fake_tmux_command(version)
       file = Tempfile.new('ttytest_fake_tmux')
       begin
@@ -47,6 +17,42 @@ module TTYtest
       ensure
         file.close
         file.unlink # deletes the temp file
+      end
+    end
+
+    def test_driver_available
+      # Using actual tmux
+      @driver = TTYtest::Tmux::Driver.new
+      assert @driver.available?
+    end
+
+    def test_availability_valid_version
+      with_fake_tmux_command('1.8') do |cmd|
+        @driver = TTYtest::Tmux::Driver.new(command: cmd)
+        assert @driver.available?
+      end
+
+      with_fake_tmux_command('2.0') do |cmd|
+        @driver = TTYtest::Tmux::Driver.new(command: cmd)
+        assert @driver.available?
+      end
+    end
+
+    def test_availability_invalid_version
+      with_fake_tmux_command('1.7') do |cmd|
+        @driver = TTYtest::Tmux::Driver.new(command: cmd)
+        assert !@driver.available?
+        assert_raises TTYtest::Tmux::Driver::TmuxError do
+          @driver.new_terminal('')
+        end
+      end
+    end
+
+    def test_availability_tmux_command_not_found
+      @driver = TTYtest::Tmux::Driver.new(command: 'tmux_command_not_found')
+      assert !@driver.available?
+      assert_raises TTYtest::Tmux::Driver::TmuxError do
+        @driver.new_terminal('')
       end
     end
 

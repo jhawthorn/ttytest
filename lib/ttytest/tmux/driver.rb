@@ -45,7 +45,7 @@ module TTYtest
         puts "tmux(#{args.inspect[1...-1]})" if debug?
 
         stdout, stderr, status = Open3.capture3(@tmux_cmd, '-L', SOCKET_NAME, *args)
-        raise TmuxError, "tmux(#{args.inspect[1...-1]}) failed\n#{stderr}" unless status.success?
+        raise TmuxError, "tmux(#{args.inspect[1...-1]}) failed\n#{stderr}" unless !status.nil? && status.success?
 
         stdout
       end

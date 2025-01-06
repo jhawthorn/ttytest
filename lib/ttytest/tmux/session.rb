@@ -6,16 +6,17 @@ module TTYtest
     class Session
       # @api private
       def initialize(driver, name)
+        @id = SecureRandom.uuid
         @driver = driver
         @name = name
 
-        # ObjectSpace.define_finalizer(self, self.class.finalize(driver, name))
+        ObjectSpace.define_finalizer(@id, proc {
+          begin
+            driver.tmux(*%W[kill-session -t #{name}])
+          rescue ThreadError => _e # final session always throws, ThreadError can't alloc new
+          end
+        })
       end
-
-      # @api private
-      # def self.finalize(driver, name)
-      #   proc { driver.tmux(*%W[kill-session -t #{name}]) }
-      # end
 
       def capture
         contents = driver.tmux(*%W[capture-pane -t #{name} -p])

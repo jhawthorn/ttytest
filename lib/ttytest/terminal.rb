@@ -13,9 +13,9 @@ module TTYtest
 
     # @api private
     # @see TTYtest.new_terminal
-    def initialize(driver_terminal, max_wait_time: nil)
+    def initialize(driver_terminal)
       @driver_terminal = driver_terminal
-      @max_wait_time = max_wait_time || TTYtest.default_max_wait_time
+      @max_wait_time = TTYtest.default_max_wait_time
     end
 
     # @!method send_keys(*keys)
