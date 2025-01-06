@@ -10,7 +10,12 @@ module TTYtest
         @driver = driver
         @name = name
 
-        # ObjectSpace.define_finalizer(@id, proc { driver.tmux(*%W[kill-session -t #{name}]) })
+        ObjectSpace.define_finalizer(@id, proc {
+          begin
+            driver.tmux(*%W[kill-session -t #{name}])
+          rescue ThreadError => _e # final session always throws, ThreadError can't alloc new
+          end
+        })
       end
 
       def capture
