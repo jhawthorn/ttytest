@@ -13,10 +13,12 @@ module TTYtest
   NEWLINE = 10.chr # \n
   VERTICAL_TAB = 11.chr # \v
   FORM_FEED = 12.chr # \f
+  CTRLL = 12.chr
   CARRIAGE_RETURN = 13.chr # \r
   CTRLU = 21.chr
   CTRLW = 23.chr
   ESCAPE = 27.chr # ^[ or /033 or /e
+  CTRL_ = 31.chr
   DELETE = 127.chr
 
   UP_ARROW = "#{ESCAPE}[A".freeze
