@@ -129,5 +129,57 @@ module TTYtest
       @tty.max_wait_time = 1
       assert_equal 1, @tty.max_wait_time
     end
+
+    def test_send_line
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line("echo 'Hello, world'")
+      @tty.assert_row(1, 'Hello, world')
+      @tty.assert_row(2, '$')
+    end
+
+    def test_send_line_extra_newline
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line("echo 'Hello, world'\n")
+      @tty.assert_row(1, 'Hello, world')
+      @tty.assert_row(2, '$')
+    end
+
+    def test_send_line_empty
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line('')
+      @tty.assert_row(1, '$')
+    end
+
+    def test_typical_example
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 7)
+      @tty.assert_row(0, '$')
+      @tty.assert_cursor_position(2, 0)
+
+      @tty.send_line('echo "Hello, world"')
+
+      @tty.assert_contents <<~TTY
+        $ echo "Hello, world"
+        Hello, world
+        $
+      TTY
+      @tty.assert_cursor_position(2, 2)
+
+      @tty.assert_contents_at(0, 0, '$ echo "Hello, world"')
+
+      @tty.assert_row_starts_with(0, '$ echo')
+      @tty.assert_row_ends_with(0, '"Hello, world"')
+      @tty.assert_row_starts_with(1, 'Hello')
+      @tty.assert_row_ends_with(1, ', world')
+
+      @tty.print_rows # => ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ""]
+
+      @tty.print # prints out the contents of the terminal:
+      # $ echo "Hello, world"
+      # Hello, world
+      # $
+    end
   end
 end
