@@ -13,7 +13,8 @@ module TTYtest
         ObjectSpace.define_finalizer(@id, proc {
           begin
             driver.tmux(*%W[kill-session -t #{name}])
-          rescue ThreadError => _e # final session always throws, ThreadError can't alloc new
+          rescue ThreadError => _e # final session always throws during testing (running rake),
+            # throws error 'ThreadError can't alloc new'
           end
         })
       end
@@ -52,6 +53,18 @@ module TTYtest
         keys.split('').each do |key|
           driver.tmux(*%W[send-keys -t #{name} -l], key)
         end
+      end
+
+      # Send line to tmux, no need to worry about newline character
+      def send_line(line)
+        send_keys_one_at_a_time(line)
+        send_newline unless line[-1] == '\n'
+      end
+
+      # Send line then sleep for sleep_time
+      def send_line_then_sleep(line, sleep_time)
+        send_line(line)
+        sleep sleep_time
       end
 
       def send_newline

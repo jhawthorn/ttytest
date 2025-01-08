@@ -24,6 +24,10 @@ module TTYtest
     # @!method send_keys_one_at_a_time(keys)
     #   Simulate typing keys into the terminal. For noncanonical cli's/shells which read character by character.
     #   @param [String] keys keys to send to the terminal
+    # @!method send_line(line)
+    #   Simulate sending a line to the terminal and hitting enter.
+    # @!method send_line_then_sleep(line, sleep_time)
+    #   Simulate sending a line to the terminal and hitting enter, then wait for the sleep_time.
     # @!method send_newline
     #   Simulate typing enter by sending newline character to the terminal.
     # @!method send_newlines
@@ -74,6 +78,7 @@ module TTYtest
     #   @return [Capture] instantaneous state of the terminal when called
     def_delegators :@driver_terminal,
                    :send_keys, :send_keys_one_at_a_time,
+                   :send_line, :send_line_then_sleep,
                    :send_newline, :send_newlines,
                    :send_delete, :send_deletes,
                    :send_backspace, :send_backspaces,
