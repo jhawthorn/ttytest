@@ -11,7 +11,9 @@ module TTYtest
   BACKSPACE = 8.chr
   TAB = 9.chr # \t
   NEWLINE = 10.chr # \n
+  ENTER = 10.chr # \n
   VERTICAL_TAB = 11.chr # \v
+  SHIFT_ENTER = 11.chr # \v
   FORM_FEED = 12.chr # \f
   CTRLL = 12.chr
   CARRIAGE_RETURN = 13.chr # \r

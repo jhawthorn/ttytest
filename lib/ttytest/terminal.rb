@@ -21,70 +21,127 @@ module TTYtest
     # @!method send_keys(*keys)
     #   Simulate typing keys into the terminal. For canonical cli's/shells which read line by line.
     #   @param [String] keys keys to send to the terminal
+
     # @!method send_keys_one_at_a_time(keys)
     #   Simulate typing keys into the terminal. For noncanonical cli's/shells which read character by character.
     #   @param [String] keys keys to send to the terminal
+
     # @!method send_line(line)
     #   Simulate sending a line to the terminal and hitting enter.
+    #   Can send multiline input, but if you want to send several commands at once, see send_lines(lines)
+    #   @param [String] line the line to send to the terminal
+
     # @!method send_line_then_sleep(line, sleep_time)
-    #   Simulate sending a line to the terminal and hitting enter, then wait for the sleep_time.
+    #   Simulate sending a line to the terminal and hitting enter, then sleeping for sleep_time.
+    #   @param [String] line the line to send to the terminal
+    #   @param [Integer] sleep_time the amount of time to sleep after sending the line
+
+    # @!method send_lines(lines)
+    #   Simulate sending a multiple lines to the terminal and hitting enter after each line.
+    #   @param [String] lines array of lines to send to the terminal
+
+    # @!method send_lines_then_sleep(lines, sleep_time)
+    #   Simulate sending multiples lines to the terminal and hitting enter after each line.
+    #   After sending all lines, then wait for the sleep_time.
+    #   @param [String] line the line to send to the terminal
+    #   @param [Integer] sleep_time the amount of time to sleep after sending the line
+
+    # @!method send_line_then_sleep_and_repeat(lines, sleep_time)
+    #   Simulate sending a line to the terminal and hitting enter, then sleeping for sleep_time.
+    #   before sending the next line.
+    #   @param [String] line the line to send to the terminal
+    #   @param [Integer] sleep_time the amount of time to sleep after sending the line
+
     # @!method send_newline
     #   Simulate typing enter by sending newline character to the terminal.
-    # @!method send_newlines
+
+    # @!method send_newlines(number_of_times)
+    #   Simulates sending newline the specified number of times.
+    #   @param [Integer] number_of_times number of times to send newline
+
+    # @!method send_enter
+    #   Simulate typing enter by sending newline character to the terminal.
+
+    # @!method send_enters(number_of_times)
     #   Simulates sending newline the specified number of times.
     #   @param [Integer] number of times to send newline
+
     # @!method send_delete
     #   Simulate typing the delete key in the terminal.
-    # @!method send_deletes
+
+    # @!method send_deletes(number_of_times)
     #   Simulates typing delete the specified number of times.
     #   @param [Integer] number of times to send delete
+
     # @!method send_backspace
     #   Simulate typing the backspace key in the terminal.
-    # @!method send_backspaces
+
+    # @!method send_backspaces(number_of_times)
     #   Simulates typing backspace the specified number of times.
     #   @param [Integer] number of times to send backspace
+
     # @!method send_left_arrow
     #   Simulate typing the left arrow key in the terminal.
-    # @!method send_left_arrows
+
+    # @!method send_left_arrows(number_of_times)
     #   Simulates typing left arrow the specified number of times.
     #   @param [Integer] number of times to send left arrow
+
     # @!method send_right_arrow
     #   Simulate typing the right arrow key in the terminal.
-    # @!method send_right_arrows
+
+    # @!method send_right_arrows(number_of_times)
     #   Simulates typing right arrow the specified number of times.
     #   @param [Integer] number of times to send right arrow
+
     # @!method send_down_arrow
     #   Simulate typing the down arrow key in the terminal.
-    # @!method send_down_arrows
+
+    # @!method send_down_arrows(number_of_times)
     #   Simulates typing the down arrow the specified number of times.
     #   @param [Integer] number of times to send down arrow
+
     # @!method send_up_arrow
     #   Simulate typing the up arrow key in the terminal.
-    # @!method send_up_arrows
+
+    # @!method send_up_arrows(number_of_times)
     #   Simulates typing the up arrow the specified number of times.
     #   @param [Integer] number of times to send up arrow
-    # @!method send_keys_exact
+
+    # @!method send_keys_exact(keys)
     #   Send tmux send-keys command to the terminal, such as DC or Enter, to simulate pressing that key in the terminal.
+    #   @param [String] keys the line to send to the terminal
+
     # @!method send_home
     #   Simulates typing in the Home key in the terminal.
+
     # @!method send_end
     #   Simulates typing in the End key in the terminal.
+
     # @!method send_clear
     #   Clears the screen in the terminal using ascii clear command.
+
     # @!method send_escape
     #   Simulates typing in the Escape (ESC) key in the terminal.
+
+    # @!method send_escapes(number_of_times)
+    #   Simulates typing in the Escape (ESC) key in the terminal the specified number of times.
+    #   @param [Integer] number of times to send escape
+
     # @!method capture
     #   Capture the current state of the terminal
     #   @return [Capture] instantaneous state of the terminal when called
     def_delegators :@driver_terminal,
                    :send_keys, :send_keys_one_at_a_time,
                    :send_line, :send_line_then_sleep,
+                   :send_lines, :send_lines_then_sleep, :send_line_then_sleep_and_repeat,
                    :send_newline, :send_newlines,
+                   :send_enter, :send_enters,
                    :send_delete, :send_deletes,
                    :send_backspace, :send_backspaces,
                    :send_left_arrow, :send_left_arrows, :send_right_arrow, :send_right_arrows,
                    :send_down_arrow, :send_down_arrows, :send_up_arrow, :send_up_arrows,
-                   :send_keys_exact, :send_home, :send_end, :send_clear, :send_escape,
+                   :send_keys_exact, :send_home, :send_end, :send_clear, :send_escape, :send_escapes,
                    :capture
 
     # @!method print

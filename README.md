@@ -192,7 +192,9 @@ There are some commonly used keys available as constants to make interacting wit
   TTYtest::BACKSPACE
   TTYtest::TAB
   TTYtest::NEWLINE # \n
-  TTYtest::VERTICAL_TAB
+  TTYtest::ENTER # \n
+  TTYtest::VERTICAL_TAB # \v
+  TTYtest::SHIFT_ENTER # \v
   TTYtest::FORM_FEED # \f or New Page NP
   TTYtest::CTRLL
   TTYtest::CARRIAGE_RETURN # \r
