@@ -67,9 +67,29 @@ module TTYtest
         sleep sleep_time
       end
 
+      def send_lines(*lines)
+        lines.each do |line|
+          send_line(line)
+        end
+      end
+
+      def send_lines_then_sleep(*lines, sleep_time)
+        lines.each do |line|
+          send_line(line)
+        end
+        sleep sleep_time
+      end
+
+      def send_line_then_sleep_and_repeat(*lines)
+        lines.each do |line|
+          send_line_then_sleep(line)
+        end
+      end
+
       def send_newline
         driver.tmux(*%W[send-keys -t #{name} -l], %(\n))
       end
+      alias send_enter send_newline
 
       def send_newlines(number_of_times)
         while number_of_times.positive?
@@ -77,6 +97,7 @@ module TTYtest
           number_of_times -= 1
         end
       end
+      alias send_enters send_newlines
 
       def send_delete
         send_keys_exact(%(DC))
@@ -167,6 +188,13 @@ module TTYtest
 
       def send_escape
         send_keys_exact(%(Escape))
+      end
+
+      def send_escapes(number_of_times)
+        while number_of_times.positive?
+          send_escape
+          number_of_times -= 1
+        end
       end
 
       private

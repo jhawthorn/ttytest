@@ -46,6 +46,7 @@ module TTYtest
       raise MatchError,
             "expected row #{row_number} to be like #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
+    alias assert_row_contains assert_row_like
 
     # Asserts the contents of a single row starts with expected string
     # @param [Integer] row_number the row (starting from 0) to test against
