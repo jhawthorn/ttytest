@@ -6,7 +6,7 @@ ttytest2 is a fork and a drop-in replacement for [ttytest](https://github.com/jh
 
 It works by running commands inside a tmux session, capturing the pane, and comparing the content to your assertions.
 
-The assertions will wait a specified amount of time (default 2 seconds) for the expected content to appear.
+The assertions will wait a specified amount of time (configurable, default 2 seconds) for the expected content to appear.
 
 [![Gem Version](https://badge.fury.io/rb/ttytest2.svg?icon=si%3Arubygems)](https://badge.fury.io/rb/ttytest2)
 
@@ -77,15 +77,25 @@ Assertions will be retried for up to 2 seconds when called through TTYtest::Term
 Available assertions:
 
 * `assert_row(row_number, expected_text)`
+
 * `assert_row_at(row_number, column_start_position, column_end_position, expected_text)`
+
 * `assert_row_like(row_number, expected_text)`
+
 * `assert_row_starts_with(row_number, expected_text)`
+
 * `assert_row_ends_with(row_number, expected_text)`
+
 * `assert_row_regexp(row_number, regexp_str)`
+
 * `assert_cursor_position(x: x, y: y)`
+
 * `assert_cursor_visible`
+
 * `assert_cursor_hidden`
+
 * `assert_contents(lines_of_terminal)`
+
 * `assert_contents_at(row_start, row_end, expected_text)`
 
 ### Output
@@ -118,21 +128,30 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_newlines(number_of_times)` # equivalent to calling send_newline number_of_times
 * `send_enter` # alias for send_newline
 * `send_enters(number_of_times)` # alias for send_newlines
+
 * `send_backspace` # simulate hitting backspace, equivalent to @tty.send_keys(TTYtest::BACKSPACE)
 * `send_backspaces(number_of_times)` # equivalent to calling send_backspace number_of_times
+
 * `send_delete` # simulate hitting delete, equivalent to calling send_keys_exact(%(DC))
 * `send_deletes` # equivalent to calling send_delete number_of_times
+
 * `send_right_arrow`
 * `send_right_arrows(number_of_times)`
+
 * `send_left_arrow`
 * `send_left_arrows(number_of_times)`
+
 * `send_up_arrow`
 * `send_up_arrows(number_of_times)`
+
 * `send_down_arrow`
 * `send_down_arrows(number_of_times)`
+
 * `send_home` # simulate pressing the Home key
 * `send_end` # simulate pressing the End key
+
 * `send_clear` # clear the screen by sending clear ascii code
+
 * `send_escape`
 * `send_escapes`
 
@@ -227,7 +246,7 @@ There are some commonly used keys available as constants to make interacting wit
   TTYtest::CLEAR # clear the screen
 ```
 
-### Tips
+## Tips
 
 If you are using ttyest2 to test your CLI, using sh is easier than bash because you don't have to worry about user, current working directory, etc. as shown in the examples.
 
