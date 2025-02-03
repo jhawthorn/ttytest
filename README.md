@@ -95,9 +95,19 @@ You can send output to the terminal with the following calls.
 Note: Most of the time send_line has the best ergonomics.
 
 * `send_line(line)`: simulate typing in a command in the terminal and hitting enter!
+
 * `send_line_then_sleep(line, sleep_time)`: simulate typing in a command in the terminal and hitting enter, then wait for sleep_time seconds.
+
+* `send_lines(lines)`: for each line in lines, simulate sending the line and hitting enter.
+
+* `send_lines_then_sleep(lines, sleep_time)`: for each line in lines, simulate sending the line and hitting enter. After sending all the lines, sleep for sleep_time.
+
+* `send_line_then_sleep_and_repeat(lines, sleep_time)`: for each line in lines, simulate sending the line and hitting enter, then sleep before sending the next line.
+
 * `send_keys(output)`: for canonical shells/CLI's (or multi-character keys for noncanonical shells/CLI's).
+
 * `send_keys_one_at_a_time(output)`: for noncanonical shells/CLI's.
+
 * `send_keys_exact(output)`: for sending tmux specific keys (any supported send-keys arguments like: DC for delete, Escape for ESC, etc.)
 
 ### Output Helpers
@@ -106,6 +116,8 @@ Helper functions to make sending output easier! They use the methods above under
 
 * `send_newline` # simulate hitting enter, equivalent to @tty.send_keys(%(\n))
 * `send_newlines(number_of_times)` # equivalent to calling send_newline number_of_times
+* `send_enter` # alias for send_newline
+* `send_enters(number_of_times)` # alias for send_newlines
 * `send_backspace` # simulate hitting backspace, equivalent to @tty.send_keys(TTYtest::BACKSPACE)
 * `send_backspaces(number_of_times)` # equivalent to calling send_backspace number_of_times
 * `send_delete` # simulate hitting delete, equivalent to calling send_keys_exact(%(DC))
@@ -121,6 +133,8 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_home` # simulate pressing the Home key
 * `send_end` # simulate pressing the End key
 * `send_clear` # clear the screen by sending clear ascii code
+* `send_escape`
+* `send_escapes`
 
 ### F keys?
 
@@ -165,8 +179,6 @@ You can use the method rows to get all rows of the terminal as an array, of use 
 
 # if you want to programatically access the rows, you can do so using @tty.rows
 p @tty.rows # is equivalent to above statement @tty.print_rows
-
-
 
 # you can use @tty.capture to access the entire pane.
 @tty.print # prints out the contents of the terminal:
