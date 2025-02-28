@@ -39,6 +39,14 @@ module TTYtest
         Terminal.new(session)
       end
 
+      def new_default_sh_terminal
+        new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 24)
+      end
+
+      def new_sh_terminal(width: 80, height: 24)
+        new_terminal(%(PS1='$ ' /bin/sh), width: width, height: height)
+      end
+
       # @api private
       def tmux(*args)
         ensure_available

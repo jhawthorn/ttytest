@@ -4,8 +4,7 @@ require 'test_helper'
 
 module TTYtest
   class TerminalTest < Minitest::Test
-    def hello_world_test_helper
-      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+    def hello_world_test
       assert !@tty.nil?
       @tty.assert_row(0, '$')
       @tty.send_keys('echo "Hello, world"')
@@ -17,8 +16,28 @@ module TTYtest
       @tty
     end
 
+    def hello_world_test_helper
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      hello_world_test
+    end
+
     def test_shell_hello_world
       hello_world_test_helper
+    end
+
+    def test_new_sh_terminal_hello_world
+      @tty = TTYtest.new_sh_terminal
+      hello_world_test
+    end
+
+    def test_new_sh_terminal_with_and_height_hello_world
+      @tty = TTYtest.new_sh_terminal(width: 40, height: 5)
+      hello_world_test
+    end
+
+    def test_new_default_sh_terminal_hello_world
+      @tty = TTYtest.new_default_sh_terminal
+      hello_world_test
     end
 
     def test_command_exiting
