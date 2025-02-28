@@ -181,5 +181,35 @@ module TTYtest
       # Hello, world
       # $
     end
+
+    def test_send_lines
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_lines('echo hello', 'echo world')
+      @tty.assert_row(0, '$ echo hello')
+      @tty.assert_row(1, 'hello')
+      @tty.assert_row(2, '$ echo world')
+      @tty.assert_row(3, 'world')
+    end
+
+    def test_send_lines_then_sleep
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_lines_then_sleep('echo hello', 'echo world', 0.1)
+      @tty.assert_row(0, '$ echo hello')
+      @tty.assert_row(1, 'hello')
+      @tty.assert_row(2, '$ echo world')
+      @tty.assert_row(3, 'world')
+    end
+
+    def test_send_line_then_sleep_and_repeat
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line_then_sleep_and_repeat('echo hello', 'echo world', 0.1)
+      @tty.assert_row(0, '$ echo hello')
+      @tty.assert_row(1, 'hello')
+      @tty.assert_row(2, '$ echo world')
+      @tty.assert_row(3, 'world')
+    end
   end
 end
