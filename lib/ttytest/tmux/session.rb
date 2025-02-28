@@ -80,9 +80,9 @@ module TTYtest
         sleep sleep_time
       end
 
-      def send_line_then_sleep_and_repeat(*lines)
+      def send_line_then_sleep_and_repeat(*lines, sleep_time)
         lines.each do |line|
-          send_line_then_sleep(line)
+          send_line_then_sleep(line, sleep_time)
         end
       end
 
