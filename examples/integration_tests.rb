@@ -755,7 +755,7 @@ def stdout_and_stderr_redirection_tests(row)
 end
 
 row = 0
-@tty = TTYtest.new_terminal(%(PS1='$ ' ./bin/ncsh), width: 120, height: 120)
+@tty = TTYtest.new_terminal(%(./bin/ncsh), width: 120, height: 120)
 
 row = startup_tests(row, true)
 row = basic_tests row
@@ -776,7 +776,7 @@ tab_autocompletion_tests row
 @tty.send_newline
 
 row = 0
-@tty = TTYtest.new_terminal(%(PS1='$ ' ./bin/ncsh), width: 180, height: 150)
+@tty = TTYtest.new_terminal(%(./bin/ncsh), width: 180, height: 150)
 row = startup_tests(row, false)
 row = syntax_error_tests row
 row = stderr_redirection_tests row
