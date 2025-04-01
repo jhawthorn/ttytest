@@ -257,6 +257,33 @@ module TTYtest
       end
     end
 
+    def test_assert_rows_each_match_regexp_success
+      @capture = Capture.new(EMPTY)
+
+      @capture = Capture.new("foo\nfoo\nfoo\n")
+      @capture.assert_rows_each_match_regexp(0, 2, 'foo')
+      @capture.assert_rows_each_match_regexp(0, 2, '[o]')
+      # @capture.assert_rows_each_match_regexp(0, 2, 'fo]')
+      # @capture.assert_rows_each_match_regexp(0, 2, '[o]')
+    end
+
+    def test_assert_rows_each_match_regexp_failure
+      @capture = Capture.new(EMPTY)
+      assert_raises TTYtest::MatchError do
+        @capture.assert_rows_each_match_regexp(0, 2, '[o]')
+      end
+
+      @capture = Capture.new("foo\nfoo\nfoo\n")
+
+      assert_raises TTYtest::MatchError do
+        @capture.assert_rows_each_match_regexp(0, 2, '[a]')
+      end
+
+      assert_raises TTYtest::MatchError do
+        @capture.assert_rows_each_match_regexp(0, 2, 'ba]')
+      end
+    end
+
     def test_assert_cursor_position_success
       @capture = Capture.new(EMPTY)
       @capture.assert_cursor_position(0, 0)

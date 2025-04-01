@@ -99,14 +99,14 @@ module TTYtest
     # @param [String] regexp_str the regular expression as a string that will be used to match with.
     # @raise [MatchError] if the row doesn't match against the regular expression
     def assert_rows_each_match_regexp(row_start, row_end, regexp_str)
-      row_end += 1 if row_end.zero?
       regexp = Regexp.new(regexp_str)
+      row_end += 1 if row_end.zero?
 
-      rows.slice(row_start, row_end).each do |actual_row|
+      rows.slice(row_start, row_end).each_with_index do |actual_row, index|
         next if actual_row.match?(regexp)
 
         raise MatchError,
-              "expected row #{row_number} to match regexp #{regexp_str} but it did not. Row value #{actual_row.inspect}\nEntire screen:\n#{self}"
+              "expected row #{index} to match regexp #{regexp_str} but it did not. Row value #{actual_row.inspect}\nEntire screen:\n#{self}"
       end
     end
 
