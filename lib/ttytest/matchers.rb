@@ -10,6 +10,7 @@ module TTYtest
     def assert_row(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
+
       return if actual == expected
 
       raise MatchError,
@@ -26,6 +27,7 @@ module TTYtest
       expected = expected.rstrip
       actual = row(row_number)
       column_end += 1
+
       return if actual[column_start, column_end].eql?(expected)
 
       raise MatchError,
@@ -41,6 +43,7 @@ module TTYtest
     def assert_row_like(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
+
       return if actual.include?(expected)
 
       raise MatchError,
@@ -55,6 +58,7 @@ module TTYtest
     def assert_row_starts_with(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
+
       return if actual.start_with?(expected)
 
       raise MatchError,
@@ -68,6 +72,7 @@ module TTYtest
     def assert_row_ends_with(row_number, expected)
       expected = expected.rstrip
       actual = row(row_number)
+
       return if actual.end_with?(expected)
 
       raise MatchError,
@@ -88,6 +93,23 @@ module TTYtest
             "expected row #{row_number} to match regexp #{regexp_str} but it did not. Row value #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
+    # Asserts the contents of a multiple rows each match against the passed in regular expression
+    # @param [Integer] row_start the row (starting from 0) to test against
+    # @param [Integer] row_end the last row to test against
+    # @param [String] regexp_str the regular expression as a string that will be used to match with.
+    # @raise [MatchError] if the row doesn't match against the regular expression
+    def assert_rows_each_match_regexp(row_start, row_end, regexp_str)
+      regexp = Regexp.new(regexp_str)
+      row_end += 1 if row_end.zero?
+
+      rows.slice(row_start, row_end).each_with_index do |actual_row, index|
+        next if actual_row.match?(regexp)
+
+        raise MatchError,
+              "expected row #{index} to match regexp #{regexp_str} but it did not. Row value #{actual_row.inspect}\nEntire screen:\n#{self}"
+      end
+    end
+
     # Asserts that the cursor is in the expected position
     # @param [Integer] x cursor x (row) position, starting from 0
     # @param [Integer] y cursor y (column) position, starting from 0
@@ -95,6 +117,7 @@ module TTYtest
     def assert_cursor_position(x, y)
       expected = [x, y]
       actual = [cursor_x, cursor_y]
+
       return if actual == expected
 
       raise MatchError,
@@ -115,14 +138,11 @@ module TTYtest
       raise MatchError, "expected cursor to be hidden was visible\nEntire screen:\n#{self}"
     end
 
-    # Asserts the full contents of the terminal
-    # @param [String] expected the full expected contents of the terminal. Trailing whitespace on each line is ignored
-    # @raise [MatchError] if the terminal doesn't match the expected content
-    def assert_contents(expected)
+    def matched(expected, actual)
       expected_rows = expected.split("\n")
       diff = []
       matched = true
-      rows.each_with_index do |actual_row, index|
+      actual.each_with_index do |actual_row, index|
         expected_row = (expected_rows[index] || '').rstrip
         if actual_row != expected_row
           diff << "-#{expected_row}"
@@ -132,6 +152,15 @@ module TTYtest
           diff << " #{actual_row}".rstrip
         end
       end
+
+      [matched, diff]
+    end
+
+    # Asserts the full contents of the terminal
+    # @param [String] expected the full expected contents of the terminal. Trailing whitespace on each line is ignored
+    # @raise [MatchError] if the terminal doesn't match the expected content
+    def assert_contents(expected)
+      matched, diff = matched(expected, rows)
 
       return if matched
 
@@ -139,26 +168,15 @@ module TTYtest
             "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
     end
     alias assert_matches assert_contents
+    alias assert_screen assert_contents
 
     # Asserts the contents of the terminal at specified rows
     # @param [String] expected the expected contents of the terminal at specified rows. Trailing whitespace on each line is ignored
     # @raise [MatchError] if the terminal doesn't match the expected content
     def assert_contents_at(row_start, row_end, expected)
-      expected_rows = expected.split("\n")
-      diff = []
-      matched = true
       row_end += 1 if row_end.zero?
 
-      rows.slice(row_start, row_end).each_with_index do |actual_row, index|
-        expected_row = (expected_rows[index] || '').rstrip
-        if actual_row != expected_row
-          diff << "-#{expected_row}"
-          diff << "+#{actual_row}"
-          matched = false
-        else
-          diff << " #{actual_row}".rstrip
-        end
-      end
+      matched, diff = matched(expected, rows.slice(row_start, row_end))
 
       return if matched
 
@@ -166,6 +184,7 @@ module TTYtest
             "screen did not match expected content:\n--- expected\n+++ actual\n#{diff.join("\n")}"
     end
     alias assert_matches_at assert_contents_at
+    alias assert_rows assert_contents_at
 
     METHODS = public_instance_methods
   end

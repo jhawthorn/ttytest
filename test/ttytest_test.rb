@@ -38,4 +38,8 @@ class TTYtestTest < Minitest::Test
     @tty.max_wait_time = 3
     assert_equal 3, @tty.max_wait_time
   end
+
+  def test_new_terminal_bash
+    assert_instance_of TTYtest::Terminal, TTYtest.new_terminal('/bin/bash')
+  end
 end

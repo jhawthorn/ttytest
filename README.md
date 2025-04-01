@@ -39,6 +39,7 @@ The assertions will wait a specified amount of time (configurable, default 2 sec
 
 ``` ruby
 require 'ttytest'
+
 @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 7)
 @tty.assert_row(0, '$')
 @tty.assert_cursor_position(2, 0)
@@ -66,6 +67,31 @@ TTY
 # $ echo "Hello, world"
 # Hello, world
 # $
+```
+
+### Initializing
+
+Call one of these methods to initialize an instance of ttytest2.
+
+* `new_terminal(cmd, width, height)`: initialize new tmux terminal instance and run cmd.
+
+* `new_default_sh_terminal()`: intialize new tmux terminal instance using sh, width of 80, height of 24.
+
+* `new_sh_terminal(width, height)`: intialize new tmux terminal instance using sh and width and height parameters.
+
+``` sh
+require 'ttytest'
+
+# these are all equivalent
+@tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh))
+@tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 24)
+@tty = TTYtest.new_default_sh_terminal
+@tty = TTYtest.new_sh_terminal
+@tty = TTYtest.new_sh_terminal(width: 80, height: 24)
+
+# you can also use other shells, like bash
+@tty = TTYtest.new_terminal('/bin/bash')
+@tty = TTYtest.new_terminal('/bin/bash', width: 80, height: 24)
 ```
 
 ### Assertions
