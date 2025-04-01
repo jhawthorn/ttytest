@@ -79,7 +79,7 @@ Call one of these methods to initialize an instance of ttytest2.
 
 * `new_sh_terminal(width, height)`: intialize new tmux terminal instance using sh and width and height parameters.
 
-``` sh
+``` ruby
 require 'ttytest'
 
 # these are all equivalent
