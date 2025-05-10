@@ -17,6 +17,17 @@ module TTYtest
             "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
 
+    # Asserts the specified row is empty
+    # @param [Integer] row_number the row (starting from 0) to test against
+    # @raise [MatchError] if the row isn't empty
+    def assert_row_is_empty(row_number)
+      actual = row(row_number)
+
+      return if actual == ""
+
+      raise MatchError, "expected row #{row_number} to be empty but got #{actual.inspect}\nEntire screen:\n#{self}"
+    end
+
     # Asserts the contents of a single row contains the expected string at a specific position
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [Integer] column_start the column position to start comparing expected against

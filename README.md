@@ -104,6 +104,8 @@ Available assertions:
 
 * `assert_row(row_number, expected_text)`
 
+* `assert_row_is_empty(row_number)`
+
 * `assert_row_at(row_number, column_start_position, column_end_position, expected_text)`
 
 * `assert_row_like(row_number, expected_text)`
