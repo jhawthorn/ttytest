@@ -46,6 +46,23 @@ module TTYtest
       end
     end
 
+    def test_assert_row_is_empty_success
+      @capture = Capture.new(EMPTY)
+      @capture.assert_row_is_empty(0)
+      @capture.assert_row_is_empty(1)
+      @capture.assert_row_is_empty(2)
+      @capture.assert_row_is_empty(3)
+      @capture.assert_row_is_empty(4)
+    end
+
+    def test_assert_row_is_empty_failure
+      @capture = Capture.new("foo\nfoo\n")
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row_is_empty(0)
+      end
+      assert_includes ex.message, 'expected row 0 to be empty'
+    end
+
     def test_assert_row_at_success
       @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
       @capture.assert_row_at(0, 0, 0, 'f')
