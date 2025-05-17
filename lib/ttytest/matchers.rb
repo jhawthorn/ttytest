@@ -23,7 +23,7 @@ module TTYtest
     def assert_row_is_empty(row_number)
       actual = row(row_number)
 
-      return if actual == ""
+      return if actual == ''
 
       raise MatchError, "expected row #{row_number} to be empty but got #{actual.inspect}\nEntire screen:\n#{self}"
     end
