@@ -46,6 +46,14 @@ module TTYtest
       end
     end
 
+    def test_assert_row_nil_failure
+      @capture = Capture.new(nil)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row(0, 'foo')
+      end
+      assert_includes ex.message, 'expected row 0 to be "foo" but got ""'
+    end
+
     def test_assert_row_is_empty_success
       @capture = Capture.new(EMPTY)
       @capture.assert_row_is_empty(0)
@@ -88,6 +96,13 @@ module TTYtest
 
     def test_assert_row_at_failure
       @capture = Capture.new(EMPTY)
+      assert_raises TTYtest::MatchError do
+        @capture.assert_row_at(0, 0, 2, 'foo')
+      end
+    end
+
+    def test_assert_row_at_nil_failure
+      @capture = Capture.new(nil)
       assert_raises TTYtest::MatchError do
         @capture.assert_row_at(0, 0, 2, 'foo')
       end

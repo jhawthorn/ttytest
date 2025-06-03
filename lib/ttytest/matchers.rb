@@ -3,6 +3,22 @@
 module TTYtest
   # Assertions for ttytest2.
   module Matchers
+    def get_inspection(actual)
+      if actual.nil?
+        'nil'
+      else
+        actual.inspect
+      end
+    end
+
+    def get_inspection_bounded(actual, column_start, column_end)
+      if actual.nil?
+        'nil'
+      else
+        actual[column_start, column_end]
+      end
+    end
+
     # Asserts the contents of a single row match the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
@@ -11,11 +27,12 @@ module TTYtest
       expected = expected.rstrip
       actual = row(row_number)
 
-      return if actual == expected
+      return if !actual.nil? && actual == expected
 
       raise MatchError,
-            "expected row #{row_number} to be #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
+            "expected row #{row_number} to be #{expected.inspect} but got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
+    alias assert_line assert_row
 
     # Asserts the specified row is empty
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -25,8 +42,10 @@ module TTYtest
 
       return if actual == ''
 
-      raise MatchError, "expected row #{row_number} to be empty but got #{actual.inspect}\nEntire screen:\n#{self}"
+      raise MatchError,
+            "expected row #{row_number} to be empty but got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
+    alias assert_line_is_empty assert_row_is_empty
 
     # Asserts the contents of a single row contains the expected string at a specific position
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -39,13 +58,15 @@ module TTYtest
       actual = row(row_number)
       column_end += 1
 
-      return if actual[column_start, column_end].eql?(expected)
+      return if !actual.nil? && actual[column_start, column_end].eql?(expected)
+
+      inspection = get_inspection_bounded(actual, column_start, column_end)
 
       raise MatchError,
             "expected row #{row_number} to contain #{expected[column_start,
-                                                              column_end]} at #{column_start}-#{column_end} and got #{actual[column_start,
-                                                                                                                             column_end]}\nEntire screen:\n#{self}"
+                                                              column_end]} at #{column_start}-#{column_end} and got #{inspection}\nEntire screen:\n#{self}"
     end
+    alias assert_line_at assert_row_at
 
     # Asserts the contents of a single row contains the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -55,12 +76,14 @@ module TTYtest
       expected = expected.rstrip
       actual = row(row_number)
 
-      return if actual.include?(expected)
+      return if !actual.nil? && actual.include?(expected)
 
       raise MatchError,
-            "expected row #{row_number} to be like #{expected.inspect} but got #{actual.inspect}\nEntire screen:\n#{self}"
+            "expected row #{row_number} to be like #{expected.inspect} but got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
     alias assert_row_contains assert_row_like
+    alias assert_line_contains assert_row_like
+    alias assert_line_like assert_row_like
 
     # Asserts the contents of a single row starts with expected string
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -70,10 +93,10 @@ module TTYtest
       expected = expected.rstrip
       actual = row(row_number)
 
-      return if actual.start_with?(expected)
+      return if !actual.nil? && actual.start_with?(expected)
 
       raise MatchError,
-            "expected row #{row_number} to start with #{expected.inspect} and got #{actual.inspect}\nEntire screen:\n#{self}"
+            "expected row #{row_number} to start with #{expected.inspect} and got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
 
     # Asserts the contents of a single row end with expected
@@ -84,10 +107,10 @@ module TTYtest
       expected = expected.rstrip
       actual = row(row_number)
 
-      return if actual.end_with?(expected)
+      return if !actual.nil? && actual.end_with?(expected)
 
       raise MatchError,
-            "expected row #{row_number} to end with #{expected.inspect} and got #{actual.inspect}\nEntire screen:\n#{self}"
+            "expected row #{row_number} to end with #{expected.inspect} and got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
 
     # Asserts the contents of a single row match against the passed in regular expression
@@ -98,10 +121,10 @@ module TTYtest
       regexp = Regexp.new(regexp_str)
       actual = row(row_number)
 
-      return if actual.match?(regexp)
+      return if !actual.nil? && actual.match?(regexp)
 
       raise MatchError,
-            "expected row #{row_number} to match regexp #{regexp_str} but it did not. Row value #{actual.inspect}\nEntire screen:\n#{self}"
+            "expected row #{row_number} to match regexp #{regexp_str} but it did not. Row value #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
 
     # Asserts the contents of a multiple rows each match against the passed in regular expression
@@ -114,10 +137,10 @@ module TTYtest
       row_end += 1 if row_end.zero?
 
       rows.slice(row_start, row_end).each_with_index do |actual_row, index|
-        next if actual_row.match?(regexp)
+        next if !actual_row.nil? && actual_row.match?(regexp)
 
         raise MatchError,
-              "expected row #{index} to match regexp #{regexp_str} but it did not. Row value #{actual_row.inspect}\nEntire screen:\n#{self}"
+              "expected row #{index} to match regexp #{regexp_str} but it did not. Row value #{get_inspection(actual_row)}\nEntire screen:\n#{self}"
       end
     end
 
@@ -132,7 +155,7 @@ module TTYtest
       return if actual == expected
 
       raise MatchError,
-            "expected cursor to be at #{expected.inspect} but was at #{actual.inspect}\nEntire screen:\n#{self}"
+            "expected cursor to be at #{expected.inspect} but was at #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
 
     # @raise [MatchError] if the cursor is hidden
