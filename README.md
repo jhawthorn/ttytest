@@ -126,6 +126,10 @@ Available assertions:
 
 * `assert_contents_at(row_start, row_end, expected_text)`
 
+Some assertions have aliases, like `assert_matches_at` has the alias `assert_rows`.
+
+If you are reading this on github, the ruby docs accessible from [RubyDoc.Info](https://www.rubydoc.info/gems/ttytest2/) document all of the aliases.
+
 ### Output
 
 You can send output to the terminal with the following calls.
@@ -220,21 +224,23 @@ You can use the method rows to get all rows of the terminal as an array, of use 
 @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 7)
 @tty.send_line('echo "Hello, world"'))
 
-# you can use @tty.rows to access the entire pane, split by line into an array.
+# If you want to print the current terminal rows as an array of lines, you can use @tty.print_rows.
 @tty.print_rows # prints out the contents of the terminal as an array:
 # ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ""]
 
-# if you want to programatically access the rows, you can do so using @tty.rows
-p @tty.rows # is equivalent to above statement @tty.print_rows
+# you can use @tty.rows to access the entire pane, split by line into an array.
+# if you want to programatically access the rows, you can do so using @tty.rows.
+p @tty.rows # this is equivalent to above statement @tty.print_rows.
 
-# you can use @tty.capture to access the entire pane.
+# If you want to print the current terminal contents, you can use @tty.print.
 @tty.print # prints out the contents of the terminal:
 # $ echo "Hello, world"
 # Hello, world
 # $
 
-# if you want to programatically access the entire pane, you can do so using @tty.capture
-p "\n#{@tty.capture}" # is equivalent to above statement @tty.print
+# you can use @tty.capture to access the entire pane.
+# if you want to programatically access the entire pane, you can do so using @tty.capture.
+p "\n#{@tty.capture}" # this is equivalent to above statement @tty.print
 ```
 
 ### Constants
