@@ -28,6 +28,7 @@ module TTYtest
     def_delegators :driver, :new_terminal, :new_default_sh_terminal, :new_sh_terminal
   end
 
+  # The error type raised when an assertion fails.
   class MatchError < StandardError; end
 
   self.driver = TTYtest::Tmux::Driver.new

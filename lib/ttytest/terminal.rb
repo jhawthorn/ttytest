@@ -5,14 +5,15 @@ require 'ttytest/matchers'
 require 'ttytest/capture'
 
 module TTYtest
-  # @attr [Integer] max_wait_time the maximum amount of time (in seconds) to retry assertions before failing.
+  # @attr [Integer] max_wait_time The maximum amount of time (in seconds) to retry an assertion before failing and raising a MatchError.
   class Terminal
     extend Forwardable
 
     attr_accessor :max_wait_time
 
     # @api private
-    # @see TTYtest.new_terminal
+    # @see TTYtest.new_terminal, use this or other new_* methods instead.
+    # Internal constructor.
     def initialize(driver_terminal)
       @driver_terminal = driver_terminal
       @max_wait_time = TTYtest.default_max_wait_time
@@ -129,8 +130,8 @@ module TTYtest
     #   @param [Integer] number of times to send escape
 
     # @!method capture
-    #   Capture the current state of the terminal
-    #   @return [Capture] instantaneous state of the terminal when called
+    #   Capture represents the current state of the terminal.
+    #   @return [Capture] The current state of the terminal when called
     def_delegators :@driver_terminal,
                    :send_keys, :send_keys_one_at_a_time,
                    :send_line, :send_line_then_sleep,
