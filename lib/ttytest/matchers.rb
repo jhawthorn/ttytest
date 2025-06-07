@@ -19,18 +19,29 @@ module TTYtest
       end
     end
 
+    def validate(row)
+      return if @height.nil?
+      return unless row >= @height
+
+      raise MatchError,
+            "row is at #{row}, which is greater than set height #{height}, so assertions will fail. If intentional, set height larger or break apart tests.\n
+            Entire screen:\n#{self}"
+    end
+
     # Asserts the contents of a single row match the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match exactly
     def assert_row(row_number, expected)
+      validate(row_number)
       expected = expected.rstrip
       actual = row(row_number)
 
       return if !actual.nil? && actual == expected
 
       raise MatchError,
-            "expected row #{row_number} to be #{expected.inspect} but got #{get_inspection(actual)}\nEntire screen:\n#{self}"
+            "expected row #{row_number} to be #{expected.inspect} but got #{get_inspection(actual)}\n
+            Entire screen:\n#{self}"
     end
     alias assert_line assert_row
 
@@ -38,6 +49,7 @@ module TTYtest
     # @param [Integer] row_number the row (starting from 0) to test against
     # @raise [MatchError] if the row isn't empty
     def assert_row_is_empty(row_number)
+      validate(row_number)
       actual = row(row_number)
 
       return if actual == ''
@@ -54,6 +66,7 @@ module TTYtest
     # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row_at(row_number, column_start, column_end, expected)
+      validate(row_number)
       expected = expected.rstrip
       actual = row(row_number)
       column_end += 1
@@ -73,6 +86,7 @@ module TTYtest
     # @param [String] expected the expected value contained in the row. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row_like(row_number, expected)
+      validate(row_number)
       expected = expected.rstrip
       actual = row(row_number)
 
@@ -90,6 +104,7 @@ module TTYtest
     # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row_starts_with(row_number, expected)
+      validate(row_number)
       expected = expected.rstrip
       actual = row(row_number)
 
@@ -104,6 +119,7 @@ module TTYtest
     # @param [String] expected the expected value that the row starts with. Any trailing whitespace is ignored
     # @raise [MatchError] if the row doesn't match
     def assert_row_ends_with(row_number, expected)
+      validate(row_number)
       expected = expected.rstrip
       actual = row(row_number)
 
@@ -118,6 +134,7 @@ module TTYtest
     # @param [String] regexp_str the regular expression as a string that will be used to match with.
     # @raise [MatchError] if the row doesn't match against the regular expression
     def assert_row_regexp(row_number, regexp_str)
+      validate(row_number)
       regexp = Regexp.new(regexp_str)
       actual = row(row_number)
 
@@ -133,6 +150,7 @@ module TTYtest
     # @param [String] regexp_str the regular expression as a string that will be used to match with.
     # @raise [MatchError] if the row doesn't match against the regular expression
     def assert_rows_each_match_regexp(row_start, row_end, regexp_str)
+      validate(row_end)
       regexp = Regexp.new(regexp_str)
       row_end += 1 if row_end.zero?
 
@@ -208,6 +226,7 @@ module TTYtest
     # @param [String] expected the expected contents of the terminal at specified rows. Trailing whitespace on each line is ignored
     # @raise [MatchError] if the terminal doesn't match the expected content
     def assert_contents_at(row_start, row_end, expected)
+      validate(row_end)
       row_end += 1 if row_end.zero?
 
       matched, diff = matched(expected, rows.slice(row_start, row_end))

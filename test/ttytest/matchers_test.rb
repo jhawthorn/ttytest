@@ -54,6 +54,14 @@ module TTYtest
       assert_includes ex.message, 'expected row 0 to be "foo" but got ""'
     end
 
+    def test_assert_row_row_gt_height
+      @capture = Capture.new('', width: 20, height: 2)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row(2, 'foo')
+      end
+      assert_includes ex.message, 'which is greater than set height'
+    end
+
     def test_assert_row_is_empty_success
       @capture = Capture.new(EMPTY)
       @capture.assert_row_is_empty(0)
