@@ -1,4 +1,4 @@
-rubygems # frozen_string_literal: true
+# frozen_string_literal: true
 
 module TTYtest
   # Represents the complete state of a {TTYtest::Terminal} at the time it was captured, including contents, cursor position, etc.
