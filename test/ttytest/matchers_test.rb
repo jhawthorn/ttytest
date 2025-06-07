@@ -46,6 +46,26 @@ module TTYtest
       end
     end
 
+    def test_assert_row_nil_failure
+      @capture = Capture.new(nil)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row(0, 'foo')
+      end
+      assert_includes ex.message, 'expected row 0 to be "foo" but got ""'
+    end
+
+    def test_assert_row_row_gt_height
+      @capture = Capture.new('', width: 20, height: 2)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row(2, 'foo')
+      end
+      assert_includes ex.message, 'which is greater than set height'
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row(5, 'foo')
+      end
+      assert_includes ex.message, 'which is greater than set height'
+    end
+
     def test_assert_row_is_empty_success
       @capture = Capture.new(EMPTY)
       @capture.assert_row_is_empty(0)
@@ -61,6 +81,14 @@ module TTYtest
         @capture.assert_row_is_empty(0)
       end
       assert_includes ex.message, 'expected row 0 to be empty'
+    end
+
+    def test_assert_row_is_empty_row_gt_height_failure
+      @capture = Capture.new("foo\nfoo\n", width: 20, height: 5)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row_is_empty(5)
+      end
+      assert_includes ex.message, 'which is greater than set height'
     end
 
     def test_assert_row_at_success
@@ -91,6 +119,21 @@ module TTYtest
       assert_raises TTYtest::MatchError do
         @capture.assert_row_at(0, 0, 2, 'foo')
       end
+    end
+
+    def test_assert_row_at_nil_failure
+      @capture = Capture.new(nil)
+      assert_raises TTYtest::MatchError do
+        @capture.assert_row_at(0, 0, 2, 'foo')
+      end
+    end
+
+    def test_assert_row_at_row_gt_height_failure
+      @capture = Capture.new(EMPTY, width: 20, height: 2)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_row_at(2, 0, 2, 'foo')
+      end
+      assert_includes ex.message, 'which is greater than set height'
     end
 
     def test_assert_row_at_trailing_whitespace
@@ -453,6 +496,15 @@ TERM
       assert_raises TTYtest::MatchError do
         @capture.assert_contents_at(0, 0, '$ echo "Hello, world"')
       end
+    end
+
+    def test_assert_contents_at_row_gt_height_failure
+      @capture = Capture.new("\n\n\n", width: 20, height: 4)
+      @capture.print_rows
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_contents_at(0, 5, '$ echo "Hello, world"')
+      end
+      assert_includes ex.message, 'which is greater than set height'
     end
 
     def test_assert_contents_at_trailing_whitespace

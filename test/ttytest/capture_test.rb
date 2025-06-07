@@ -49,13 +49,13 @@ module TTYtest
     end
 
     def test_print
-      @capture = @capture = Capture.new("0\n1\n2\n3\n", width: 20, height: 5)
+      @capture = Capture.new("0\n1\n2\n3\n", width: 20, height: 5)
       puts
       @capture.print
     end
 
     def test_print_rows
-      @capture = @capture = Capture.new("0\n1\n2\n3\n", width: 20, height: 5)
+      @capture = Capture.new("0\n1\n2\n3\n", width: 20, height: 5)
       puts
       @capture.print_rows
     end
