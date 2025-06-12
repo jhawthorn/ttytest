@@ -173,17 +173,17 @@ module TTYtest
     end
 
     def test_send_line_exact
-      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 60, height: 5)
       @tty.assert_row(0, '$')
-      @tty.send_line_exact("echo 'Hello, world'")
+      @tty.send_line_exact("if [ true ]; then echo 'Hello, world'; else echo hi; fi")
       @tty.assert_row(1, 'Hello, world')
       @tty.assert_row(2, '$')
     end
 
     def test_send_line_exact_extra_newline
-      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 60, height: 5)
       @tty.assert_row(0, '$')
-      @tty.send_line_exact("echo 'Hello, world'\n")
+      @tty.send_line_exact("if [ true ]; then echo 'Hello, world'; else echo hi; fi")
       @tty.assert_row(1, 'Hello, world')
       @tty.assert_row(2, '$')
     end
@@ -245,10 +245,10 @@ module TTYtest
     end
 
     def test_send_lines_exact
-      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 60, height: 5)
       @tty.assert_row(0, '$')
-      @tty.send_lines_exact('echo hello', 'echo world')
-      @tty.assert_row(0, '$ echo hello')
+      @tty.send_lines_exact('if [ true ]; then echo hello; else echo hi; fi', 'echo world')
+      @tty.assert_row(0, '$ if [ true ]; then echo hello; else echo hi; fi')
       @tty.assert_row(1, 'hello')
       @tty.assert_row(2, '$ echo world')
       @tty.assert_row(3, 'world')
