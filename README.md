@@ -1,10 +1,10 @@
 # ttytest2
 
-ttytest2 is an acceptance test framework for interactive console applications. It's like [capybara](https://github.com/teamcapybara/capybara) for the terminal.
+ttytest2 is a user acceptance test framework for CLI & shell applications.
 
-ttytest2 is a fork and a drop-in replacement for [ttytest](https://github.com/jhawthorn/ttytest), because I had some features I needed for my own project.
+ttytest2 is a fork and a drop-in replacement for [ttytest](https://github.com/jhawthorn/ttytest).
 
-It works by running commands inside a tmux session, capturing the pane, and comparing the content to your assertions.
+It works by creating a tmux session behind the scenes, running the specified commands, capturing the pane, and then comparing the actual content to the expected content based on the assertions made.
 
 The assertions will wait a specified amount of time (configurable, default 2 seconds) for the expected content to appear.
 
@@ -14,16 +14,15 @@ The assertions will wait a specified amount of time (configurable, default 2 sec
 
 1. [Minimum Requirements](#minimum-requirements)
 2. [Usage](#usage)
-3. [Simple Example](#simple-example)
+3. [Initializing](#initializing)
 4. [Assertions](#assertions)
 5. [Output](#output)
-6. [Output Helpers](#output-helpers)
+6. [Configurables](#configurables)
 7. [Troubleshooting](#troubleshooting)
-8. [Constants](#constants)
-9. [Tips](#tips)
-10. [Docker](#docker)
-11. [Contributing](#contributing)
-12. [License](#license)
+8. [Tips](#tips)
+9. [Docker](#docker)
+10. [Contributing](#contributing)
+11. [License](#license)
 
 ## Minimum Requirements
 
@@ -69,7 +68,7 @@ TTY
 # $
 ```
 
-### Initializing
+## Initializing
 
 Call one of these methods to initialize an instance of ttytest2.
 
@@ -94,13 +93,19 @@ require 'ttytest'
 @tty = TTYtest.new_terminal('/bin/bash', width: 80, height: 24)
 ```
 
-### Assertions
+## Assertions
 
-The main way to use TTYtest is through assertions.
+The main way to use ttytest2 is through assertions.
 
-Assertions will be retried for up to 2 seconds when called through TTYtest::Terminal.
+Assertions will be retried for up to 2 seconds when called through TTYtest::Terminal, unless you specify otherwise (see [Configurables](#configurables)).
 
-Available assertions:
+### Aliases
+
+Some assertions have aliases, like `assert_matches_at` has the alias `assert_rows`.
+
+If you are reading this on github, the ruby docs accessible from [RubyDoc.Info](https://www.rubydoc.info/gems/ttytest2/) document all of the aliases.
+
+### Available Assertions
 
 * `assert_row(row_number, expected_text)`
 
@@ -126,15 +131,27 @@ Available assertions:
 
 * `assert_contents_at(row_start, row_end, expected_text)`
 
-Some assertions have aliases, like `assert_matches_at` has the alias `assert_rows`.
-
-If you are reading this on github, the ruby docs accessible from [RubyDoc.Info](https://www.rubydoc.info/gems/ttytest2/) document all of the aliases.
-
-### Output
+## Output
 
 You can send output to the terminal with the following calls.
 
 Note: Most of the time send_line has the best ergonomics.
+
+### Base Functions
+
+These functions form the basis of interacting with the tmux pane. They power all other functions, but you can use them directly when needed.
+
+* `send_keys(output)`: for canonical shells/CLI's (or multi-character keys for noncanonical shells/CLI's).
+
+* `send_keys_one_at_a_time(output)`: for noncanonical shells/CLI's.
+
+* `send_keys_exact(output)`: sends keys as is, exactly. Also useful for sending tmux specific keys (any supported tmux send-keys arguments like: DC for delete, Escape for ESC, etc.)
+
+### Ergonomic Functions
+
+The base functions work great, but these functions build upon the base functions to provide more functionality and better ergonomics in most cases.
+
+For example, `send_line(line)` makes sure that the enter key (newline character) is sent after the `line` so you don't have to worry about adding it to `line` or calling send_newline after.
 
 * `send_line(line)`: simulate typing in a command in the terminal and hitting enter!
 
@@ -146,11 +163,9 @@ Note: Most of the time send_line has the best ergonomics.
 
 * `send_line_then_sleep_and_repeat(lines, sleep_time)`: for each line in lines, simulate sending the line and hitting enter, then sleep before sending the next line.
 
-* `send_keys(output)`: for canonical shells/CLI's (or multi-character keys for noncanonical shells/CLI's).
+* `send_line_exact`: send line exactly as is to tmux. Certain special characters may not work with send_line. You can also include tmux send-keys arguments like DC for delete, etc.
 
-* `send_keys_one_at_a_time(output)`: for noncanonical shells/CLI's.
-
-* `send_keys_exact(output)`: for sending tmux specific keys (any supported send-keys arguments like: DC for delete, Escape for ESC, etc.)
+* `send_lines_exact`: send lines exactly are they are to tmux. Similar semantics to send_line_exact.
 
 ### Output Helpers
 
@@ -165,7 +180,7 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_backspaces(number_of_times)` # equivalent to calling send_backspace number_of_times
 
 * `send_delete` # simulate hitting delete, equivalent to calling send_keys_exact(%(DC))
-* `send_deletes` # equivalent to calling send_delete number_of_times
+* `send_deletes(number_of_times)` # equivalent to calling send_delete number_of_times
 
 * `send_right_arrow`
 * `send_right_arrows(number_of_times)`
@@ -185,7 +200,7 @@ Helper functions to make sending output easier! They use the methods above under
 * `send_clear` # clear the screen by sending clear ascii code
 
 * `send_escape`
-* `send_escapes`
+* `send_escapes(number_of_times)`
 
 ### F keys?
 
@@ -197,50 +212,8 @@ Send F keys like F1, F2, etc. as shown below:
 @tty.send_keys_exact(%(F1))
 @tty.send_keys_exact(%(F2))
 # ...
-@tty.send_keys_exact(%(F11))
-@tty.send_keys_exact(%(F12))
-```
-
-### Configurables
-
-Currently the only configuration for ttytest2 is max wait time.
-
-Max wait time represents the amount of time in seconds that ttytest2 will keep retrying an assertion before failing.
-
-You can configure max wait time as shown below.
-
-``` ruby
-@tty = TTYtest::new_terminal('')
-@tty.max_wait_time = 1 # sets the max wait time to 1 second
-
-@tty.assert_row(0, 'echo Hello, world') # this assertion would fail after 1 second
-```
-
-### Troubleshooting
-
-You can use the method rows to get all rows of the terminal as an array, of use the method capture to get the contents of the terminal window. This can be useful when troubleshooting.
-
-``` ruby
-@tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 7)
-@tty.send_line('echo "Hello, world"'))
-
-# If you want to print the current terminal rows as an array of lines, you can use @tty.print_rows.
-@tty.print_rows # prints out the contents of the terminal as an array:
-# ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ""]
-
-# you can use @tty.rows to access the entire pane, split by line into an array.
-# if you want to programatically access the rows, you can do so using @tty.rows.
-p @tty.rows # this is equivalent to above statement @tty.print_rows.
-
-# If you want to print the current terminal contents, you can use @tty.print.
-@tty.print # prints out the contents of the terminal:
-# $ echo "Hello, world"
-# Hello, world
-# $
-
-# you can use @tty.capture to access the entire pane.
-# if you want to programatically access the entire pane, you can do so using @tty.capture.
-p "\n#{@tty.capture}" # this is equivalent to above statement @tty.print
+@tty.send_keys_exact('F11')
+@tty.send_keys_exact('F12')
 ```
 
 ### Constants
@@ -280,11 +253,53 @@ There are some commonly used keys available as constants to make interacting wit
   TTYtest::CLEAR # clear the screen
 ```
 
+## Configurables
+
+Currently the only configuration for ttytest2 is max wait time.
+
+Max wait time represents the amount of time in seconds that ttytest2 will keep retrying an assertion before failing.
+
+You can configure max wait time as shown below.
+
+``` ruby
+@tty = TTYtest::new_terminal('')
+@tty.max_wait_time = 1 # sets the max wait time to 1 second
+
+@tty.assert_row(0, 'echo Hello, world') # this assertion would fail after 1 second
+```
+
+## Troubleshooting
+
+You can use the method rows to get all rows of the terminal as an array, of use the method capture to get the contents of the terminal window. This can be useful when troubleshooting.
+
+``` ruby
+@tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 7)
+@tty.send_line('echo "Hello, world"'))
+
+# If you want to print the current terminal rows as an array of lines, you can use @tty.print_rows.
+@tty.print_rows # prints out the contents of the terminal as an array:
+# ["$ echo \"Hello, world\"", "Hello, world", "$", "", "", "", ""]
+
+# you can use @tty.rows to access the entire pane, split by line into an array.
+# if you want to programatically access the rows, you can do so using @tty.rows.
+p @tty.rows # this is equivalent to above statement @tty.print_rows.
+
+# If you want to print the current terminal contents, you can use @tty.print.
+@tty.print # prints out the contents of the terminal:
+# $ echo "Hello, world"
+# Hello, world
+# $
+
+# you can use @tty.capture to access the entire pane.
+# if you want to programatically access the entire pane, you can do so using @tty.capture.
+p "\n#{@tty.capture}" # this is equivalent to above statement @tty.print
+```
+
 ## Tips
 
 If you are using ttyest2 to test your CLI, using sh is easier than bash because you don't have to worry about user, current working directory, etc. as shown in the examples.
 
-If you are using ttytest2 to test your shell, using assertions like assert_row_like, assert_row_starts_with, and assert_row_ends_with are going to be extremely helpful, especially if trying to test your shell in different environments or using a docker container.
+If you are using ttytest2 to test your shell, using assertions like `assert_row_like`, `assert_row_starts_with`, and `assert_row_ends_with` are going to be extremely helpful, especially if trying to test your shell in different environments or using a docker container.
 
 ## Docker
 
