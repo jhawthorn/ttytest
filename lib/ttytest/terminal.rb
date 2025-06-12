@@ -30,6 +30,7 @@ module TTYtest
     # @!method send_line(line)
     #   Simulate sending a line to the terminal and hitting enter.
     #   Can send multiline input, but if you want to send several commands at once, see send_lines(lines)
+    #   If no newline is at the the line, it will be appended automatically.
     #   @param [String] line the line to send to the terminal
 
     # @!method send_line_then_sleep(line, sleep_time)
@@ -39,6 +40,18 @@ module TTYtest
 
     # @!method send_lines(lines)
     #   Simulate sending a multiple lines to the terminal and hitting enter after each line.
+    #   If no newline is at the end of any of the lines, it will be appended automatically.
+    #   @param [String] lines array of lines to send to the terminal
+
+    # @!method send_line_exact(line)
+    #   Simulate sending a line exactly as is to the terminal and hitting enter.
+    #   Can send multiline input, but if you want to send several commands at once, see send_lines(lines)
+    #   If no newline is at the the line, it will be appended automatically.
+    #   @param [String] line the line to send to the terminal
+
+    # @!method send_lines_exact(lines)
+    #   Simulate sending a multiple lines exactly as is to the terminal and hitting enter after each line.
+    #   If no newline is at the end of any of the lines, it will be appended automatically.
     #   @param [String] lines array of lines to send to the terminal
 
     # @!method send_lines_then_sleep(lines, sleep_time)
@@ -136,6 +149,7 @@ module TTYtest
                    :send_keys, :send_keys_one_at_a_time,
                    :send_line, :send_line_then_sleep,
                    :send_lines, :send_lines_then_sleep, :send_line_then_sleep_and_repeat,
+                   :send_line_exact, :send_lines_exact,
                    :send_newline, :send_newlines,
                    :send_enter, :send_enters,
                    :send_delete, :send_deletes,

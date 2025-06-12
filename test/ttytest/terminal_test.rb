@@ -172,6 +172,29 @@ module TTYtest
       @tty.assert_row(1, '$')
     end
 
+    def test_send_line_exact
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line_exact("echo 'Hello, world'")
+      @tty.assert_row(1, 'Hello, world')
+      @tty.assert_row(2, '$')
+    end
+
+    def test_send_line_exact_extra_newline
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line_exact("echo 'Hello, world'\n")
+      @tty.assert_row(1, 'Hello, world')
+      @tty.assert_row(2, '$')
+    end
+
+    def test_send_line_exact_empty
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_line_exact('')
+      @tty.assert_row(1, '$')
+    end
+
     def test_typical_example
       @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 80, height: 7)
       @tty.assert_row(0, '$')
@@ -215,6 +238,16 @@ module TTYtest
       @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
       @tty.assert_row(0, '$')
       @tty.send_lines_then_sleep('echo hello', 'echo world', 0.1)
+      @tty.assert_row(0, '$ echo hello')
+      @tty.assert_row(1, 'hello')
+      @tty.assert_row(2, '$ echo world')
+      @tty.assert_row(3, 'world')
+    end
+
+    def test_send_lines_exact
+      @tty = TTYtest.new_terminal(%(PS1='$ ' /bin/sh), width: 40, height: 5)
+      @tty.assert_row(0, '$')
+      @tty.send_lines_exact('echo hello', 'echo world')
       @tty.assert_row(0, '$ echo hello')
       @tty.assert_row(1, 'hello')
       @tty.assert_row(2, '$ echo world')

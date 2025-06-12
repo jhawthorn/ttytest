@@ -73,6 +73,17 @@ module TTYtest
         end
       end
 
+      def send_line_exact(line)
+        send_keys_exact(line)
+        send_newline unless line[-1] == '\n'
+      end
+
+      def send_lines_exact(*lines)
+        lines.each do |line|
+          send_line_exact(line)
+        end
+      end
+
       def send_lines_then_sleep(*lines, sleep_time)
         lines.each do |line|
           send_line(line)
