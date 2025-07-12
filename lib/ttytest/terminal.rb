@@ -51,9 +51,9 @@ module TTYtest
     def_delegators :capture, :rows, :row, :width, :height, :cursor_x, :cursor_y, :cursor_visible?, :cursor_hidden?
 
     TTYtest::Matchers::METHODS.each do |matcher_name|
-      define_method matcher_name do |*args|
+      define_method matcher_name do |*args, **kwargs|
         synchronize do
-          capture.public_send(matcher_name, *args)
+          capture.public_send(matcher_name, *args, **kwargs)
         end
       end
     end
