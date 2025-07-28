@@ -562,7 +562,9 @@ TERM
 
     def test_assert_file_doesnt_exist_file_is_directory
       @capture = Capture.new(EMPTY)
-      @capture.assert_file_doesnt_exist('./test')
+      assert_raises TTYtest::MatchError do
+        @capture.assert_file_doesnt_exist('./test')
+      end
     end
 
     def test_assert_file_contains_true

@@ -220,7 +220,7 @@ module TTYtest
     end
 
     def assert_file_doesnt_exist(file_path)
-      return unless File.exist?(file_path) && File.file?(file_path)
+      return unless File.exist?(file_path) || File.file?(file_path)
 
       raise MatchError,
             "File with path #{file_path} was found or is a directory when it was asserted it did not exist.\nEntire screen:\n#{self}"
@@ -248,7 +248,6 @@ module TTYtest
       raise file_is_dir_error(file_path) unless File.file?(file_path)
 
       file_mode = File.stat(file_path).mode
-      puts file_mode
       perms_octal = format('%o', file_mode)[-3...]
       return if perms_octal == permissions
 
