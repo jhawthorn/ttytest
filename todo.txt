@@ -1,7 +1,2 @@
-assert_file_exists("./output.json")
-assert_file_not_exists("./tempfile")
-assert_file_contains("./log.txt", "Job completed")
-assert_file_permissions("./script.sh", "755")
-
 assert_exit_code(0)            # For success
 assert_exit_code(1)            # For expected failure
