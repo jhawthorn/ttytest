@@ -3,31 +3,6 @@
 module TTYtest
   # Assertions for ttytest2.
   module Matchers
-    def get_inspection(actual)
-      if actual.nil?
-        'nil'
-      else
-        actual.inspect
-      end
-    end
-
-    def get_inspection_bounded(actual, column_start, column_end)
-      if actual.nil?
-        'nil'
-      else
-        actual[column_start, column_end]
-      end
-    end
-
-    def validate(row)
-      return if @height.nil?
-      return unless row >= @height
-
-      raise MatchError,
-            "row is at #{row}, which is greater than set height #{height}, so assertions will fail. If intentional, set height larger or break apart tests.\n
-            Entire screen:\n#{self}"
-    end
-
     # Asserts the contents of a single row match the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
@@ -239,6 +214,85 @@ module TTYtest
     alias assert_matches_at assert_contents_at
     alias assert_rows assert_contents_at
 
+    def file_not_found_error(file_path)
+      raise MatchError,
+            "File with path #{file_path} was not found when asserted it did exist.\nEntire screen:\n#{self}"
+    end
+
+    def file_is_dir_error(file_path)
+      raise MatchError,
+            "File with path #{file_path} is a directory.\nEntire screen:\n#{self}"
+    end
+
+    def assert_file_exists(file_path)
+      raise file_not_found_error(file_path) unless File.exist?(file_path)
+      raise file_is_dir_error(file_path) unless File.file?(file_path)
+    end
+
+    def assert_file_doesnt_exist(file_path)
+      return unless File.exist?(file_path) && File.file?(file_path)
+
+      raise MatchError,
+            "File with path #{file_path} was found or is a directory when it was asserted it did not exist.\nEntire screen:\n#{self}"
+    end
+
+    def assert_file_contains(file_path, needle)
+      raise file_not_found_error(file_path) unless File.exist?(file_path)
+      raise file_is_dir_error(file_path) unless File.file?(file_path)
+
+      file_contains = false
+      File.foreach(file_path) do |line|
+        if line.include?(needle)
+          file_contains = true
+          break
+        end
+      end
+      return if file_contains
+
+      raise MatchError,
+            "File with path #{file_path} did not contain #{needle}.\nEntire screen:\n#{self}"
+    end
+
+    def assert_file_has_permissions(file_path, permissions)
+      raise file_not_found_error(file_path) unless File.exist?(file_path)
+      raise file_is_dir_error(file_path) unless File.file?(file_path)
+
+      file_mode = File.stat(file_path).mode
+      puts file_mode
+      perms_octal = format('%o', file_mode)[-3...]
+      return if perms_octal == permissions
+
+      raise MatchError,
+            "File had permissions #{perms_octal}, not #{permissions} as expected.\n Entire screen:\n#{self}"
+    end
+
     METHODS = public_instance_methods
+
+    private
+
+    def get_inspection(actual)
+      if actual.nil?
+        'nil'
+      else
+        actual.inspect
+      end
+    end
+
+    def get_inspection_bounded(actual, column_start, column_end)
+      if actual.nil?
+        'nil'
+      else
+        actual[column_start, column_end]
+      end
+    end
+
+    def validate(row)
+      return if @height.nil?
+      return unless row >= @height
+
+      raise MatchError,
+            "row is at #{row}, which is greater than set height #{height}, so assertions will fail. If intentional, set height larger or break apart tests.\n
+            Entire screen:\n#{self}"
+    end
   end
 end

@@ -524,5 +524,94 @@ TERM
       @capture.assert_contents_at(0, 1, "\nfoo  ")
       @capture.assert_contents_at(0, 1, "  \nfoo \n ")
     end
+
+    def test_assert_file_exists_file_exists
+      @capture = Capture.new(EMPTY)
+      File.new('./testfile', 'w')
+      @capture.assert_file_exists('./testfile')
+      File.delete('./testfile')
+    end
+
+    def test_assert_file_exists_file_doesnt_exist
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_exists('./nonexistant-file')
+      end
+      assert_includes ex.message, 'was not found'
+    end
+
+    def test_assert_file_exists_file_is_directory
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_exists('./test')
+      end
+      assert_includes ex.message, 'is a directory'
+    end
+
+    def test_assert_file_doesnt_exist_file_doesnt_exist
+      @capture = Capture.new(EMPTY)
+      @capture.assert_file_doesnt_exist('./testfile')
+    end
+
+    def test_assert_file_doesnt_exist_file_exists
+      @capture = Capture.new(EMPTY)
+      assert_raises TTYtest::MatchError do
+        @capture.assert_file_doesnt_exist('./Gemfile')
+      end
+    end
+
+    def test_assert_file_doesnt_exist_file_is_directory
+      @capture = Capture.new(EMPTY)
+      @capture.assert_file_doesnt_exist('./test')
+    end
+
+    def test_assert_file_contains_true
+      @capture = Capture.new(EMPTY)
+      @capture.assert_file_contains('./Gemfile', 'gemspec')
+    end
+
+    def test_assert_file_contains_false
+      @capture = Capture.new(EMPTY)
+      assert_raises TTYtest::MatchError do
+        @capture.assert_file_contains('./Gemfile', 'hello, world!')
+      end
+    end
+
+    def test_assert_file_contains_file_is_directory
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_contains('./test', 'hello, world!')
+      end
+      assert_includes ex.message, 'is a directory'
+    end
+
+    def test_assert_file_contains_file_doesnt_exist
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_contains('./nonexistant-file', 'hello, world!')
+      end
+      assert_includes ex.message, 'was not found'
+    end
+
+    def test_assert_file_has_permissions_true
+      @capture = Capture.new(EMPTY)
+      @capture.assert_file_has_permissions('./Gemfile', '644')
+    end
+
+    def test_assert_file_has_permissions_false
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_has_permissions('./Gemfile', '775')
+      end
+      assert_includes ex.message, 'File had permissions 644, not 775 as expected'
+    end
+
+    def test_assert_file_has_permissions_file_doesnt_exist
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_has_permissions('./nonexistant-file', '775')
+      end
+      assert_includes ex.message, 'was not found'
+    end
   end
 end
