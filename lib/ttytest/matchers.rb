@@ -214,16 +214,6 @@ module TTYtest
     alias assert_matches_at assert_contents_at
     alias assert_rows assert_contents_at
 
-    def file_not_found_error(file_path)
-      raise MatchError,
-            "File with path #{file_path} was not found when asserted it did exist.\nEntire screen:\n#{self}"
-    end
-
-    def file_is_dir_error(file_path)
-      raise MatchError,
-            "File with path #{file_path} is a directory.\nEntire screen:\n#{self}"
-    end
-
     def assert_file_exists(file_path)
       raise file_not_found_error(file_path) unless File.exist?(file_path)
       raise file_is_dir_error(file_path) unless File.file?(file_path)
@@ -293,6 +283,16 @@ module TTYtest
       raise MatchError,
             "row is at #{row}, which is greater than set height #{height}, so assertions will fail. If intentional, set height larger or break apart tests.\n
             Entire screen:\n#{self}"
+    end
+
+    def file_not_found_error(file_path)
+      raise MatchError,
+            "File with path #{file_path} was not found when asserted it did exist.\nEntire screen:\n#{self}"
+    end
+
+    def file_is_dir_error(file_path)
+      raise MatchError,
+            "File with path #{file_path} is a directory.\nEntire screen:\n#{self}"
     end
   end
 end
