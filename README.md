@@ -262,10 +262,11 @@ Max wait time represents the amount of time in seconds that ttytest2 will keep r
 You can configure max wait time as shown below.
 
 ``` ruby
-@tty = TTYtest::new_terminal('')
-@tty.max_wait_time = 1 # sets the max wait time to 1 second
+@tty = TTYtest::new_terminal('', max_wait_time: 1) # sets the max wait time to 1 second
 
 @tty.assert_row(0, 'echo Hello, world') # this assertion would fail after 1 second
+@tty.max_wait_time = 3
+@tty.assert_row(0, 'echo Hello, world') # this assertion would fail after 3 seconds
 ```
 
 ## Troubleshooting

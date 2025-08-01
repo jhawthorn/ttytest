@@ -10,6 +10,8 @@ module TTYtest
   class << self
     attr_accessor :driver, :default_max_wait_time
 
+    attr_reader :terminal
+
     extend Forwardable
     # @!method new_terminal(command, width: 80, height: 24)
     #   Create a new terminal through the current driver.
@@ -25,7 +27,22 @@ module TTYtest
     # @!method new_sh_terminal(width: 80, height: 24)
     #   Create a new terminal using '/bin/sh' with ability to set width and height.
     #   Useful for Unixes.
-    def_delegators :driver, :new_terminal, :new_default_sh_terminal, :new_sh_terminal
+    def_delegators :driver
+
+    def new_terminal(cmd, width: 80, height: 24, max_wait_time: 2)
+      @max_wait_time = max_wait_time
+      driver.new_terminal(cmd, width: width, height: height)
+    end
+
+    def new_default_sh_terminal(max_wait_time: 2)
+      @max_wait_time = max_wait_time
+      driver.new_default_sh_terminal
+    end
+
+    def new_sh_terminal(width: 80, height: 24, max_wait_time: 2)
+      @max_wait_time = max_wait_time
+      driver.new_sh_terminal(width: width, height: height)
+    end
   end
 
   # The error type raised when an assertion fails.

@@ -7,7 +7,7 @@ module TTYtest
   # @attr_reader [Integer] cursor_x The cursor's column (starting at 0) in the captured terminal.
   # @attr_reader [Integer] cursor_y The cursor's row (starting at 0) in the captured terminal.
   class Capture
-    include TTYtest::Matchers
+    include TTYtest::Assertions
 
     attr_reader :cursor_x, :cursor_y, :width, :height
 

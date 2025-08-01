@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
-require 'ttytest/matchers'
+require 'ttytest/assertions'
 require 'ttytest/capture'
 
 module TTYtest
@@ -193,7 +193,7 @@ module TTYtest
                    :cursor_x, :cursor_y,
                    :cursor_visible?, :cursor_hidden?
 
-    Matchers::METHODS.each do |matcher_name|
+    Assertions::METHODS.each do |matcher_name|
       define_method matcher_name do |*args, **kwargs|
         synchronize do
           capture.public_send(matcher_name, *args, **kwargs)
