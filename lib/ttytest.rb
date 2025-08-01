@@ -10,8 +10,6 @@ module TTYtest
   class << self
     attr_accessor :driver, :default_max_wait_time
 
-    attr_reader :terminal
-
     extend Forwardable
     # @!method new_terminal(command, width: 80, height: 24)
     #   Create a new terminal through the current driver.

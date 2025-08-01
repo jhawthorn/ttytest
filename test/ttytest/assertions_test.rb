@@ -654,5 +654,13 @@ TERM
       @capture = Capture.new(EMPTY)
       @capture.assert_file_has_line_count('./Gemfile', 5)
     end
+
+    def test_assert_file_has_line_count_mismatch
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_has_line_count('./Gemfile', 8)
+      end
+      assert_includes ex.message, 'lines as expected'
+    end
   end
 end
