@@ -3,11 +3,11 @@
 require 'test_helper'
 
 module TTYtest
-  class MatchersTest < Minitest::Test
+  class AssertionsTest < Minitest::Test
     EMPTY = "\n" * 23
 
     def test_assert_row_success
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_row(0, 'foo')
       @capture.assert_row(1, 'bar')
       @capture.assert_row(2, 'baz')
@@ -92,7 +92,7 @@ module TTYtest
     end
 
     def test_assert_row_at_success
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_row_at(0, 0, 0, 'f')
       @capture.assert_row_at(0, 0, 1, 'fo')
       @capture.assert_row_at(0, 0, 2, 'foo')
@@ -163,7 +163,7 @@ module TTYtest
     end
 
     def test_assert_row_like_success
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_row_like(0, 'fo')
       @capture.assert_row_like(0, 'oo')
       @capture.assert_row_like(0, 'f')
@@ -208,7 +208,7 @@ module TTYtest
     end
 
     def test_assert_row_starts_with_success
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_row_starts_with(0, 'f')
       @capture.assert_row_starts_with(0, 'fo')
       @capture.assert_row_starts_with(0, 'foo')
@@ -255,7 +255,7 @@ module TTYtest
     end
 
     def test_assert_row_ends_with_success
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_row_ends_with(0, 'o')
       @capture.assert_row_ends_with(0, 'oo')
       @capture.assert_row_ends_with(0, 'foo')
@@ -300,7 +300,7 @@ module TTYtest
       @capture = Capture.new(EMPTY)
       @capture.assert_row_regexp(0, '')
 
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_row_regexp(0, 'foo')
       @capture.assert_row_regexp(0, '[o]')
       @capture.assert_row_regexp(1, 'bar')
@@ -453,7 +453,7 @@ TERM
     end
 
     def test_assert_contents_at_success_multiple_lines
-      @capture = Capture.new("foo\nbar\nbaz" + "\n" * 21)
+      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
       @capture.assert_contents_at(0, 0, 'foo')
       @capture.assert_contents_at(1, 1, 'bar')
       @capture.assert_contents_at(2, 2, 'baz')
@@ -527,9 +527,10 @@ TERM
 
     def test_assert_file_exists_file_exists
       @capture = Capture.new(EMPTY)
-      File.new('./testfile', 'w')
-      @capture.assert_file_exists('./testfile')
-      File.delete('./testfile')
+      file = './testfile'
+      File.new(file, 'w')
+      @capture.assert_file_exists(file)
+      File.delete(file)
     end
 
     def test_assert_file_exists_file_doesnt_exist
@@ -614,6 +615,52 @@ TERM
         @capture.assert_file_has_permissions('./nonexistant-file', '775')
       end
       assert_includes ex.message, 'was not found'
+    end
+
+    def test_assert_file_has_line_count_file_is_directory
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_has_line_count('./test', 1)
+      end
+      assert_includes ex.message, 'is a directory'
+    end
+
+    def test_assert_file_has_line_count_file_doesnt_exist
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_contains('./nonexistant-file', 2)
+      end
+      assert_includes ex.message, 'was not found'
+    end
+
+    def test_assert_file_has_line_count_empty_file
+      @capture = Capture.new(EMPTY)
+      file = './empty_file'
+      File.new(file, 'w')
+      @capture.assert_file_has_line_count(file, 0)
+      File.delete(file)
+    end
+
+    def test_assert_file_has_line_count_one_line_file
+      @capture = Capture.new(EMPTY)
+      file = './one_line_file'
+      File.new(file, 'w')
+      File.write(file, '1 line')
+      @capture.assert_file_has_line_count(file, 1)
+      File.delete(file)
+    end
+
+    def test_assert_file_has_line_count_gt_zero
+      @capture = Capture.new(EMPTY)
+      @capture.assert_file_has_line_count('./Gemfile', 5)
+    end
+
+    def test_assert_file_has_line_count_mismatch
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_file_has_line_count('./Gemfile', 8)
+      end
+      assert_includes ex.message, 'lines as expected'
     end
   end
 end

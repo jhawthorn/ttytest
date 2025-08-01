@@ -2,7 +2,7 @@
 
 module TTYtest
   # Assertions for ttytest2.
-  module Matchers
+  module Assertions
     # Asserts the contents of a single row match the value expected
     # @param [Integer] row_number the row (starting from 0) to test against
     # @param [String] expected the expected value of the row. Any trailing whitespace is ignored
@@ -88,6 +88,7 @@ module TTYtest
       raise MatchError,
             "expected row #{row_number} to start with #{expected.inspect} and got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
+    alias assert_line_starts_with assert_row_starts_with
 
     # Asserts the contents of a single row end with expected
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -103,6 +104,7 @@ module TTYtest
       raise MatchError,
             "expected row #{row_number} to end with #{expected.inspect} and got #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
+    alias assert_line_ends_with assert_row_ends_with
 
     # Asserts the contents of a single row match against the passed in regular expression
     # @param [Integer] row_number the row (starting from 0) to test against
@@ -118,6 +120,7 @@ module TTYtest
       raise MatchError,
             "expected row #{row_number} to match regexp #{regexp_str} but it did not. Row value #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
+    alias assert_line_regexp assert_row_regexp
 
     # Asserts the contents of a multiple rows each match against the passed in regular expression
     # @param [Integer] row_start the row (starting from 0) to test against
@@ -136,6 +139,7 @@ module TTYtest
               "expected row #{index} to match regexp #{regexp_str} but it did not. Row value #{get_inspection(actual_row)}\nEntire screen:\n#{self}"
       end
     end
+    alias assert_line_each_match_regexp assert_rows_each_match_regexp
 
     # Asserts that the cursor is in the expected position
     # @param [Integer] x cursor x (row) position, starting from 0
@@ -165,29 +169,11 @@ module TTYtest
       raise MatchError, "expected cursor to be hidden was visible\nEntire screen:\n#{self}"
     end
 
-    def matched(expected, actual)
-      expected_rows = expected.split("\n")
-      diff = []
-      matched = true
-      actual.each_with_index do |actual_row, index|
-        expected_row = (expected_rows[index] || '').rstrip
-        if actual_row != expected_row
-          diff << "-#{expected_row}"
-          diff << "+#{actual_row}"
-          matched = false
-        else
-          diff << " #{actual_row}".rstrip
-        end
-      end
-
-      [matched, diff]
-    end
-
     # Asserts the full contents of the terminal
     # @param [String] expected the full expected contents of the terminal. Trailing whitespace on each line is ignored
     # @raise [MatchError] if the terminal doesn't match the expected content
     def assert_contents(expected)
-      matched, diff = matched(expected, rows)
+      matched, diff = get_diff(expected, rows)
 
       return if matched
 
@@ -204,7 +190,7 @@ module TTYtest
       validate(row_end)
       row_end += 1 if row_end.zero?
 
-      matched, diff = matched(expected, rows.slice(row_start, row_end))
+      matched, diff = get_diff(expected, rows.slice(row_start, row_end))
 
       return if matched
 
@@ -242,6 +228,7 @@ module TTYtest
       raise MatchError,
             "File with path #{file_path} did not contain #{needle}.\nEntire screen:\n#{self}"
     end
+    alias assert_file_like assert_file_contains
 
     def assert_file_has_permissions(file_path, permissions)
       raise file_not_found_error(file_path) unless File.exist?(file_path)
@@ -253,6 +240,17 @@ module TTYtest
 
       raise MatchError,
             "File had permissions #{perms_octal}, not #{permissions} as expected.\n Entire screen:\n#{self}"
+    end
+
+    def assert_file_has_line_count(file_path, expected_count)
+      raise file_not_found_error(file_path) unless File.exist?(file_path)
+      raise file_is_dir_error(file_path) unless File.file?(file_path)
+
+      actual_count = File.foreach(file_path).count
+      return if actual_count == expected_count
+
+      raise MatchError,
+            "File had #{actual_count} lines, not #{expected_count} lines as expected.\nEntire screen:\n#{self}"
     end
 
     METHODS = public_instance_methods
@@ -282,6 +280,24 @@ module TTYtest
       raise MatchError,
             "row is at #{row}, which is greater than set height #{height}, so assertions will fail. If intentional, set height larger or break apart tests.\n
             Entire screen:\n#{self}"
+    end
+
+    def get_diff(expected, actual)
+      expected_rows = expected.split("\n")
+      diff = []
+      matched = true
+      actual.each_with_index do |actual_row, index|
+        expected_row = (expected_rows[index] || '').rstrip
+        if actual_row != expected_row
+          diff << "-#{expected_row}"
+          diff << "+#{actual_row}"
+          matched = false
+        else
+          diff << " #{actual_row}".rstrip
+        end
+      end
+
+      [matched, diff]
     end
 
     def file_not_found_error(file_path)

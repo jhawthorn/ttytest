@@ -32,7 +32,7 @@ class TTYtestTest < Minitest::Test
   end
 
   def test_set_max_wait_time
-    @tty = TTYtest.new_terminal('')
+    @tty = TTYtest.new_terminal('', max_wait_time: 1)
     @tty.max_wait_time = 1
     assert_equal 1, @tty.max_wait_time
     @tty.max_wait_time = 3
