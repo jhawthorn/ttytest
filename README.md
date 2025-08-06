@@ -135,6 +135,10 @@ If you are reading this on github, the ruby docs accessible from [RubyDoc.Info](
 
 * `assert_contents_include(expected)`
 
+* `assert_contents_empty`
+
+* `assert_contents_match_regexp(regexp_str)`
+
 * `assert_file_exists(file_path)`
 
 * `assert_file_doesnt_exist(file_path)`
