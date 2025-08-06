@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Alex Eski']
   spec.email         = ['alexeski@gmail.com']
 
-  spec.summary       = 'ttytest2 is an integration test framework for interactive console (tty) applications'
-  spec.description   = 'ttytest2 runs shell/cli applications inside of tmux and allows you to make assertions on what the output should be'
+  spec.summary       = 'ttytest2 is for integration/acceptance testing your shells/CLIs/REPLs.'
+  spec.description   = 'ttytest2 is an integration test framework for interactive console (tty) applications'
   spec.homepage      = 'https://github.com/a-eski/ttytest2'
   spec.license       = 'MIT'
 
