@@ -1,2 +1,6 @@
 assert_exit_code(0)            # For success
 assert_exit_code(1)            # For expected failure
+assert_variable_equals
+assert_prompt
+assert_prompt_after("command failed")
+assert_style(row, col, style)

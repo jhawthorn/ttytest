@@ -139,7 +139,7 @@ module TTYtest
               "expected row #{index} to match regexp #{regexp_str} but it did not. Row value #{get_inspection(actual_row)}\nEntire screen:\n#{self}"
       end
     end
-    alias assert_line_each_match_regexp assert_rows_each_match_regexp
+    alias assert_lines_each_match_regexp assert_rows_each_match_regexp
 
     # Asserts that the cursor is in the expected position
     # @param [Integer] x cursor x (row) position, starting from 0
@@ -155,6 +155,7 @@ module TTYtest
             "expected cursor to be at #{expected.inspect} but was at #{get_inspection(actual)}\nEntire screen:\n#{self}"
     end
 
+    # Asserts the cursor is currently visible
     # @raise [MatchError] if the cursor is hidden
     def assert_cursor_visible
       return if cursor_visible?
@@ -162,6 +163,7 @@ module TTYtest
       raise MatchError, "expected cursor to be visible was hidden\nEntire screen:\n#{self}"
     end
 
+    # Asserts the cursor is currently hidden
     # @raise [MatchError] if the cursor is visible
     def assert_cursor_hidden
       return if cursor_hidden?
@@ -200,11 +202,56 @@ module TTYtest
     alias assert_matches_at assert_contents_at
     alias assert_rows assert_contents_at
 
+    # Asserts the contents of the screen include the passed in string
+    # @param [String] expected the string value expected to be found in the screen contents
+    # @raise [MatchError] if the screen does not contain the expected value
+    def assert_contents_include(expected)
+      found = false
+      rows.each do |row|
+        found = true if row.include?(expected)
+      end
+      return if found
+
+      raise MatchError,
+            "Expected screen contents to include #{expected}, but it was not found.\nEntire screen:\n#{self}"
+    end
+    alias assert_screen_includes assert_contents_include
+
+    # Asserts the contents of the screen are empty
+    # @raise [MatchError] if the screen is not empty
+    def assert_contents_empty
+      return if rows.all? { |s| s.to_s.empty? }
+
+      raise MatchError,
+            "Expected screen to be empty, but found content.\nEntire screen:\n#{self}"
+    end
+    alias assert_screen_empty assert_contents_empty
+
+    # Asserts the contents of the screen as a single string match the passed in regular expression
+    # @param [String] regexp_str the regular expression as a string that will be used to match with
+    # @raise [MatchError] if the screen as a string doesn't match against the regular expression
+    def assert_contents_match_regexp(regexp_str)
+      regexp = Regexp.new(regexp_str)
+      screen = capture.to_s
+
+      return if !screen.nil? && screen.match?(regexp)
+
+      raise MatchError,
+            "Expected screen contents to match regexp #{regexp_str} but they did not\nEntire screen:\n#{self}"
+    end
+    alias assert_screen_matches_regexp assert_contents_match_regexp
+
+    # Asserts the specified file exists
+    # @param [String] file_path the path to the file
+    # @raise [MatchError] if the file is not found or is a directory/symlink
     def assert_file_exists(file_path)
       raise file_not_found_error(file_path) unless File.exist?(file_path)
       raise file_is_dir_error(file_path) unless File.file?(file_path)
     end
 
+    # Asserts the specified file does not exists
+    # @param [String] file_path the path to the file
+    # @raise [MatchError] if the file is found or is a directory/symlink
     def assert_file_doesnt_exist(file_path)
       return unless File.exist?(file_path) || File.file?(file_path)
 
@@ -212,6 +259,10 @@ module TTYtest
             "File with path #{file_path} was found or is a directory when it was asserted it did not exist.\nEntire screen:\n#{self}"
     end
 
+    # Asserts the specified file contains the passed in string value
+    # @param [String] file_path the path to the file
+    # @param [String] needle the value to search for in the file
+    # @raise [MatchError] if the file does not contain value in variable needle
     def assert_file_contains(file_path, needle)
       raise file_not_found_error(file_path) unless File.exist?(file_path)
       raise file_is_dir_error(file_path) unless File.file?(file_path)
@@ -230,6 +281,10 @@ module TTYtest
     end
     alias assert_file_like assert_file_contains
 
+    # Asserts the specified file has the permissions specified
+    # @param [String] file_path the path to the file
+    # @param [String] permissions the expected permissions of the file (in form '644' or '775')
+    # @raise [MatchError] if the file has different permissions than specified
     def assert_file_has_permissions(file_path, permissions)
       raise file_not_found_error(file_path) unless File.exist?(file_path)
       raise file_is_dir_error(file_path) unless File.file?(file_path)
@@ -242,6 +297,10 @@ module TTYtest
             "File had permissions #{perms_octal}, not #{permissions} as expected.\n Entire screen:\n#{self}"
     end
 
+    # Asserts the specified file has line count specified
+    # @param [String] file_path the path to the file
+    # @param [String] expected_count the expected line count of the file
+    # @raise [MatchError] if the file has a different line count than specified
     def assert_file_has_line_count(file_path, expected_count)
       raise file_not_found_error(file_path) unless File.exist?(file_path)
       raise file_is_dir_error(file_path) unless File.file?(file_path)

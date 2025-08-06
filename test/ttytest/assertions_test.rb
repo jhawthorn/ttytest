@@ -5,9 +5,10 @@ require 'test_helper'
 module TTYtest
   class AssertionsTest < Minitest::Test
     EMPTY = "\n" * 23
+    FOO_BAR_BAZ_THEN_EMPTY = "foo\nbar\nbaz#{"\n" * 21}".freeze
 
     def test_assert_row_success
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_row(0, 'foo')
       @capture.assert_row(1, 'bar')
       @capture.assert_row(2, 'baz')
@@ -92,7 +93,7 @@ module TTYtest
     end
 
     def test_assert_row_at_success
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_row_at(0, 0, 0, 'f')
       @capture.assert_row_at(0, 0, 1, 'fo')
       @capture.assert_row_at(0, 0, 2, 'foo')
@@ -163,7 +164,7 @@ module TTYtest
     end
 
     def test_assert_row_like_success
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_row_like(0, 'fo')
       @capture.assert_row_like(0, 'oo')
       @capture.assert_row_like(0, 'f')
@@ -208,7 +209,7 @@ module TTYtest
     end
 
     def test_assert_row_starts_with_success
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_row_starts_with(0, 'f')
       @capture.assert_row_starts_with(0, 'fo')
       @capture.assert_row_starts_with(0, 'foo')
@@ -255,7 +256,7 @@ module TTYtest
     end
 
     def test_assert_row_ends_with_success
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_row_ends_with(0, 'o')
       @capture.assert_row_ends_with(0, 'oo')
       @capture.assert_row_ends_with(0, 'foo')
@@ -300,7 +301,7 @@ module TTYtest
       @capture = Capture.new(EMPTY)
       @capture.assert_row_regexp(0, '')
 
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_row_regexp(0, 'foo')
       @capture.assert_row_regexp(0, '[o]')
       @capture.assert_row_regexp(1, 'bar')
@@ -339,7 +340,7 @@ module TTYtest
       end
 
       assert_raises TTYtest::MatchError do
-        @capture.assert_rows_each_match_regexp(0, 2, 'ba]')
+        @capture.assert_rows_each_match_regexp(0, 2, 'ba\]')
       end
     end
 
@@ -453,7 +454,7 @@ TERM
     end
 
     def test_assert_contents_at_success_multiple_lines
-      @capture = Capture.new("foo\nbar\nbaz#{"\n" * 21}")
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
       @capture.assert_contents_at(0, 0, 'foo')
       @capture.assert_contents_at(1, 1, 'bar')
       @capture.assert_contents_at(2, 2, 'baz')
@@ -523,6 +524,50 @@ TERM
       @capture.assert_contents_at(0, 1, "\nfoo ")
       @capture.assert_contents_at(0, 1, "\nfoo  ")
       @capture.assert_contents_at(0, 1, "  \nfoo \n ")
+    end
+
+    def test_assert_contents_include_true
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
+      @capture.assert_contents_include('baz')
+    end
+
+    def test_assert_contents_include_false
+      @capture = Capture.new(EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_contents_include('hello')
+      end
+      assert_includes ex.message, 'Expected screen contents to include'
+    end
+
+    def test_assert_contents_empty_true
+      @capture = Capture.new(EMPTY)
+      @capture.assert_contents_empty
+    end
+
+    def test_assert_contents_empty_true_empty_array
+      @capture = Capture.new('')
+      @capture.assert_contents_empty
+    end
+
+    def test_assert_contents_empty_false
+      @capture = Capture.new("\n\nHello!\n\n")
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_contents_empty
+      end
+      assert_includes ex.message, 'Expected screen to be empty'
+    end
+
+    def assert_contents_match_regexp_true
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
+      @capture.assert_contents_match_regexp("foo\nbar\nbaz(?:\n)")
+    end
+
+    def assert_contents_match_regexp_false
+      @capture = Capture.new(FOO_BAR_BAZ_THEN_EMPTY)
+      ex = assert_raises TTYtest::MatchError do
+        @capture.assert_contents_match_regexp(0, '[foo]')
+      end
+      assert_includes ex.message, 'Expected screen contents to match regexp'
     end
 
     def test_assert_file_exists_file_exists
