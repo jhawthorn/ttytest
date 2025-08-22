@@ -1,5 +1,7 @@
 # ttytest2
 
+<img src="images/ttytest2.png" alt="ttytest2 logo" style="width:70%; height:auto;">
+
 ttytest2 is a user acceptance test framework for CLI & shell applications.
 
 ttytest2 is a fork and a drop-in replacement for [ttytest](https://github.com/jhawthorn/ttytest).
